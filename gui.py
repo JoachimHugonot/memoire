@@ -2,8 +2,8 @@ from PyQt5.QtWidgets import *
 from PyQt5.QtGui import *
 from PyQt5.QtCore import *
 
+from cnn import *
 import sys
-import requests
 import os
 from urllib import request
 
@@ -58,6 +58,11 @@ class secondTab(QLabel):
         self.from_url_button.setFocusPolicy(Qt.NoFocus)
         self.from_url_button.clicked.connect(self.select_files_from_url)
 
+        self.from_analyse_button = QPushButton('Analyser')
+        self.from_analyse_button.setFont(FONT)
+        self.from_analyse_button.setFocusPolicy(Qt.NoFocus)
+        self.from_analyse_button.clicked.connect(self.analyse)
+
         self.from_url_edit = QTextEdit()
 
         self.from_url = QLabel()
@@ -82,6 +87,8 @@ class secondTab(QLabel):
 
         self.main_layout.addWidget(self.fileselect, 1)
         self.main_layout.addWidget(self.image_ph, 5, alignment=Qt.AlignCenter)
+
+        self.main_layout.addWidget(self.from_analyse_button, 1)  # padding
         self.main_layout.addWidget(QLabel(''), 1)  # padding
 
         self.setLayout(self.main_layout)
@@ -92,14 +99,27 @@ class secondTab(QLabel):
         print(type(file))
         if check:
             print(file)
+            self.file_to_analyse = file
             self.image_ph.setPixmap(QPixmap(file))
+
+    def analyse(self):
+        image = instance_segmentation_api(self.file_to_analyse, 'temp2.png')
+        from collections import Counter
+
+        pixmap =QPixmap('temp2.png')
+
+        # pixmap.scaledToWidth(1200)
+        self.image_ph.setPixmap(pixmap)
+
 
     def select_files_from_url(self):
 
         fp = os.path.join(os.getcwd(), 'temp.jpg')
         request.urlretrieve(self.from_url_edit.toPlainText(), fp)
         pixmap = QPixmap(fp)
-        pixmap = pixmap.scaledToWidth(1200)
+        self.file_to_analyse = fp
+        # pixmap = pixmap.scaledToWidth(1200)
+
         self.image_ph.setPixmap(pixmap)
 
     def keyPressEvent(self, event):
