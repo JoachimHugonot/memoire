@@ -19,11 +19,11 @@ COCO_INSTANCE_CATEGORY_NAMES = [
     'train',
     'camion',
     'bateau',
-    'traffic light',
-    'fire hydrant',
+    'feu de circulation',
+    'bouche d\'incendie',
     'N/A',
-    'stop sign',
-    'parking meter',
+    'stop',
+    'parcmètre',
     'banc',
     'oiseau',
     'chat',
@@ -33,72 +33,72 @@ COCO_INSTANCE_CATEGORY_NAMES = [
     'vache',
     'éléphant',
     'ours',
-    'zébra',
+    'zébre',
     'girafe',
     'N/A',
     'sac à dos',
     'parapluie',
     'N/A',
     'N/A',
-    'handbag',
-    'tie',
-    'suitcase',
+    'sac à main',
+    'cravate',
+    'malette',
     'frisbee',
-    'skis',
+    'ski',
     'snowboard',
-    'sports ball',
-    'kite',
-    'baseball bat',
-    'baseball glove',
+    'ballon',
+    'cerf-volant',
+    'batte',
+    'gant de baseball',
     'skateboard',
-    'surfboard',
-    'tennis racket',
-    'bottle',
+    'planche de surf',
+    'raquette',
+    'bouteille',
     'N/A',
-    'wine glass',
-    'cup',
-    'Fourchette',
-    'Couteau',
-    'spoon',
-    'bowl',
-    'banana',
-    'apple',
+    'verre à vin',
+    'tasse',
+    'fourchette',
+    'couteau',
+    'cuillère',
+    'bol',
+    'banane',
+    'pomme',
     'sandwich',
     'orange',
-    'broccoli',
-    'carrot',
-    'hot dog',
+    'brocoli',
+    'carotte',
+    'hot-dog',
     'pizza',
     'donut',
-    'cake',
+    'gâteau',
     'chaise',
-    'couch',
-    'potted plant',
+    'canapé',
+    'plante en pot',
     'bed', 'N/A',
-    'dining table',
+    'table à manger',
     'N/A',
     'N/A',
-    'toilet',
+    'toilettes',
     'N/A',
-    'tv',
-    'laptop',
-    'mouse',
-    'remote',
-    'keyboard',
-    'cell phone',
-    'microwave',
-    'oven',
-    'toaster',
-    'sink',
-    'refrigerator',
+    'télévision',
+    'ordinateur',
+    'souris',
+    'télécommande',
+    'clavier',
+    'natel',
+    'micro-ondes',
+    'four',
+    'grille-pain',
+    'évier',
+    'réfrigérateur',
     'N/A',
-    'book',
-    'clock',
+    'livre',
+    'horloge',
     'vase',
-    'scissors',
-    'teddy bear',
-    'hair drier',
-    'toothbrush'
+    'ciseaux',
+    'peluche',
+    'sèche-cheveux',
+    'brosse à dents'
 ]
 
 list_colors = [
@@ -128,6 +128,12 @@ list_colors = [
 
 def get_prediction(img_path, threshold):
     img = Image.open(img_path)
+    w, h = img.size
+    ratio = h / 600
+    new_h = int(h / ratio)
+    new_w = int(w / ratio)
+    img = img.resize((new_w, new_h))
+
     transform = T.Compose([T.ToTensor()])
     img = transform(img)
     pred = model([img])
@@ -165,14 +171,23 @@ def instance_segmentation_api(img_path, out_fp, threshold=0.5, rect_th=3, text_s
 
 
     img = cv2.imread(img_path)
+    print(img.shape)
+    h,w,_ = img.shape
+    ratio = h / 600
+    new_h = int(h / ratio)
+    new_w = int(w / ratio)
+    img = cv2.resize(img, (new_w, new_h))
+    print(img.shape)
     img //= 2
 
     # img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
 
     SEEN = []
     for i in range(len(masks)):
+        new = False
         if not pred_cls[i] in SEEN:
             SEEN.append(pred_cls[i])
+            new = True
             if len(SEEN) > len(list_colors):
                 break
 
@@ -187,7 +202,8 @@ def instance_segmentation_api(img_path, out_fp, threshold=0.5, rect_th=3, text_s
         y2 = int(y2)
 
         cv2.rectangle(img, [x1, y1], [x2, y2],color=color, thickness=2)
-        cv2.putText(img,pred_cls[i], [x1, y1], cv2.FONT_HERSHEY_SIMPLEX, 1, color,thickness=1)
+        if new:
+            cv2.putText(img,pred_cls[i], [x1, y1], cv2.FONT_HERSHEY_SIMPLEX, 1, color,thickness=2)
     # img = cv2.cvtColor(img, cv2.COLOR_RGB2BGR)
     cv2.imwrite(out_fp, img)
 
