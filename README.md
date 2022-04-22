@@ -8,3 +8,5 @@
 - More images ?
 - Fader ?
 - Different tabs vs one page with scrolling and "shortcuts" ?
+- installation procedure
+- Executable ? Pyinstaller ? to check
