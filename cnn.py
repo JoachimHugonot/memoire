@@ -180,6 +180,7 @@ def instance_segmentation_api(img, out_fp, threshold=0.5, rect_th=3, text_size=3
     # img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
 
     SEEN = []
+    COLORS = []
     for i in range(len(masks)):
         new = False
         if not pred_cls[i] in SEEN:
@@ -187,6 +188,7 @@ def instance_segmentation_api(img, out_fp, threshold=0.5, rect_th=3, text_size=3
             new = True
             if len(SEEN) > len(list_colors):
                 break
+            COLORS.append(list_colors[SEEN.index(pred_cls[i])])
 
         color = list_colors[SEEN.index(pred_cls[i])]
         rgb_mask = colour_mask(masks[i], color)
@@ -202,6 +204,6 @@ def instance_segmentation_api(img, out_fp, threshold=0.5, rect_th=3, text_size=3
         if new:
             cv2.putText(img,pred_cls[i], [x1, y1], cv2.FONT_HERSHEY_SIMPLEX, 1, color,thickness=2)
     # img = cv2.cvtColor(img, cv2.COLOR_RGB2BGR)
-    return img
+    return img, SEEN, COLORS
 
 
