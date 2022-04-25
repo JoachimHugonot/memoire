@@ -1,16 +1,201 @@
+# Core imports
+import sys
+import os
+import urllib
+from urllib import request
+
+# Project imports
+from cnn import *
+
+# 3rd parties imports
 from PyQt5.QtWidgets import *
 from PyQt5.QtGui import *
 from PyQt5.QtCore import *
 
-from cnn import *
-import sys
-import os
-from urllib import request
-
-global FONT, DELAY_FADE
+global FONT, DELAY_FADE,ELEMENT_BY_ELEMENT, IMAGE_HEIGHT
+ELEMENT_BY_ELEMENT = False
 FONT = QFont('Helvetica', 30)
-DELAY_FADE = 333
 
+IMAGE_HEIGHT = 600
+
+class QtWaitingSpinner(QWidget):
+    mColor = QColor(Qt.gray)
+    mRoundness = 100.0
+    mMinimumTrailOpacity = 31.4159265358979323846
+    mTrailFadePercentage = 50.0
+    mRevolutionsPerSecond = 1.57079632679489661923
+    mNumberOfLines = 20
+    mLineLength = 10
+    mLineWidth = 2
+    mInnerRadius = 20
+    mCurrentCounter = 0
+    mIsSpinning = False
+
+    def __init__(self, centerOnParent=True, disableParentWhenSpinning=True, *args, **kwargs):
+        QWidget.__init__(self, *args, **kwargs)
+        self.mCenterOnParent = centerOnParent
+        self.mDisableParentWhenSpinning = disableParentWhenSpinning
+        self.initialize()
+
+    def initialize(self):
+        self.timer = QTimer(self)
+        self.timer.timeout.connect(self.rotate)
+        self.updateSize()
+        self.updateTimer()
+        self.hide()
+
+    @pyqtSlot()
+    def rotate(self):
+        self.mCurrentCounter += 1
+        if self.mCurrentCounter > self.numberOfLines():
+            self.mCurrentCounter = 0
+        self.update()
+
+    def updateSize(self):
+        size = (self.mInnerRadius + self.mLineLength) * 2
+        self.setFixedSize(size, size)
+
+    def updateTimer(self):
+        self.timer.setInterval(1000 / (self.mNumberOfLines * self.mRevolutionsPerSecond))
+
+    def updatePosition(self):
+        if self.parentWidget() and self.mCenterOnParent:
+            self.move(self.parentWidget().width() / 2 - self.width() / 2,
+                      self.parentWidget().height() / 2 - self.height() / 2)
+
+    def lineCountDistanceFromPrimary(self, current, primary, totalNrOfLines):
+        distance = primary - current
+        if distance < 0:
+            distance += totalNrOfLines
+        return distance
+
+    def currentLineColor(self, countDistance, totalNrOfLines, trailFadePerc, minOpacity, color):
+        if countDistance == 0:
+            return color
+
+        minAlphaF = minOpacity / 100.0
+
+        distanceThreshold = ceil((totalNrOfLines - 1) * trailFadePerc / 100.0)
+        if countDistance > distanceThreshold:
+            color.setAlphaF(minAlphaF)
+
+        else:
+            alphaDiff = self.mColor.alphaF() - minAlphaF
+            gradient = alphaDiff / distanceThreshold + 1.0
+            resultAlpha = color.alphaF() - gradient * countDistance
+            resultAlpha = min(1.0, max(0.0, resultAlpha))
+            color.setAlphaF(resultAlpha)
+        return color
+
+    def paintEvent(self, event):
+        self.updatePosition()
+        painter = QPainter(self)
+        painter.fillRect(self.rect(), Qt.transparent)
+        painter.setRenderHint(QPainter.Antialiasing, True)
+        if self.mCurrentCounter > self.mNumberOfLines:
+            self.mCurrentCounter = 0
+        painter.setPen(Qt.NoPen)
+
+        for i in range(self.mNumberOfLines):
+            painter.save()
+            painter.translate(self.mInnerRadius + self.mLineLength,
+                              self.mInnerRadius + self.mLineLength)
+            rotateAngle = 360.0 * i / self.mNumberOfLines
+            painter.rotate(rotateAngle)
+            painter.translate(self.mInnerRadius, 0)
+            distance = self.lineCountDistanceFromPrimary(i, self.mCurrentCounter,
+                                                         self.mNumberOfLines)
+            color = self.currentLineColor(distance, self.mNumberOfLines,
+                                          self.mTrailFadePercentage, self.mMinimumTrailOpacity, self.mColor)
+            painter.setBrush(color)
+            painter.drawRoundedRect(QRect(0, -self.mLineWidth // 2, self.mLineLength, self.mLineLength),
+                                    self.mRoundness, Qt.RelativeSize)
+            painter.restore()
+
+    def start(self):
+        self.updatePosition()
+        self.mIsSpinning = True
+        self.show()
+
+        if self.parentWidget() and self.mDisableParentWhenSpinning:
+            self.parentWidget().setEnabled(False)
+
+        if not self.timer.isActive():
+            self.timer.start()
+            self.mCurrentCounter = 0
+
+    def stop(self):
+        self.mIsSpinning = False
+        self.hide()
+
+        if self.parentWidget() and self.mDisableParentWhenSpinning:
+            self.parentWidget().setEnabled(True)
+
+        if self.timer.isActive():
+            self.timer.stop()
+            self.mCurrentCounter = 0
+
+    def setNumberOfLines(self, lines):
+        self.mNumberOfLines = lines
+        self.updateTimer()
+
+    def setLineLength(self, length):
+        self.mLineLength = length
+        self.updateSize()
+
+    def setLineWidth(self, width):
+        self.mLineWidth = width
+        self.updateSize()
+
+    def setInnerRadius(self, radius):
+        self.mInnerRadius = radius
+        self.updateSize()
+
+    def color(self):
+        return self.mColor
+
+    def roundness(self):
+        return self.mRoundness
+
+    def minimumTrailOpacity(self):
+        return self.mMinimumTrailOpacity
+
+    def trailFadePercentage(self):
+        return self.mTrailFadePercentage
+
+    def revolutionsPersSecond(self):
+        return self.mRevolutionsPerSecond
+
+    def numberOfLines(self):
+        return self.mNumberOfLines
+
+    def lineLength(self):
+        return self.mLineLength
+
+    def lineWidth(self):
+        return self.mLineWidth
+
+    def innerRadius(self):
+        return self.mInnerRadius
+
+    def isSpinning(self):
+        return self.mIsSpinning
+
+    def setRoundness(self, roundness):
+        self.mRoundness = min(0.0, max(100, roundness))
+
+    def setColor(self, color):
+        self.mColor = color
+
+    def setRevolutionsPerSecond(self, revolutionsPerSecond):
+        self.mRevolutionsPerSecond = revolutionsPerSecond
+        self.updateTimer()
+
+    def setTrailFadePercentage(self, trail):
+        self.mTrailFadePercentage = trail
+
+    def setMinimumTrailOpacity(self, minimumTrailOpacity):
+        self.mMinimumTrailOpacity = minimumTrailOpacity
 
 class MainWindow(QWidget):
     def __init__(self):
@@ -18,10 +203,8 @@ class MainWindow(QWidget):
 
         formLayout = QVBoxLayout()
         groupBox = QGroupBox()
-
-
-
         groupBox.setLayout(formLayout)
+
         self.ELEMENTS = []
         self.scroll = QScrollArea()
         self.vsb = self.scroll.verticalScrollBar()
@@ -63,7 +246,6 @@ class MainWindow(QWidget):
             QLabel("Réseau de neurones / Neural networks"),
             QLabel("Deep learning / apprentissage en profondeur"),
             QLabel("Ces algorithmes peuvent analyser une très grande quantité de données afin d’en tirer des informations précieuses"),
-
             QLabel("Avez-vous déjà effectué une recherche sur internet et vu une publicité en rapport immédiatement après ?"),
             QLabel("Comment Google et Facebook gagnent t-ils de l’argent ? Avec la publicité, notre profil est transmis à des entreprises qui payent google pour nous afficher de la publicité. "),
             QLabel("Google et Facebook ne sont pas des entreprises qui font des logiciels, mais bien des entreprises de publicité, qui est la première source de leurs revenus"),
@@ -79,12 +261,12 @@ class MainWindow(QWidget):
 
 
         for widget in WIDGETS_ONE:
+
             if type(widget) == QLabel:
                 #widget.setWordWrap(True)
                 widget.setFont(FONT)
                 widget.setFixedHeight(150)
                 widget.setFixedWidth(1200)
-                #widget.setWidgetResizable(False)
                 widget.setWordWrap(True)
                 widget.setAlignment(Qt.AlignCenter)
                 self.ELEMENTS.append(widget)
@@ -94,9 +276,8 @@ class MainWindow(QWidget):
                     widget.setTextInteractionFlags(Qt.TextBrowserInteraction)
                     widget.setOpenExternalLinks(True)
             elif type(widget) == QPixmap:
-                print('Pixmap')
                 image_ph = QLabel()
-                widget = widget.scaledToHeight(500)
+                widget = widget.scaledToHeight(IMAGE_HEIGHT)
                 image_ph.setPixmap(widget)
 
 
@@ -118,25 +299,20 @@ class MainWindow(QWidget):
                 self.ELEMENTS.append(widget)
                 formLayout.addWidget(widget, alignment=Qt.AlignCenter)
 
-
-
-
         for el in self.ELEMENTS:
-            el.hide()
+            if ELEMENT_BY_ELEMENT :
+                el.hide()
 
 
     def mousePressEvent(self, event):
-        print('Click')
         event.accept()
 
     def keyPressEvent(self, event):
-        print('Key')
         if Qt.Key_N:
             for el in self.ELEMENTS:
                 if not el.isVisible():
                     el.show()
                     break
-            print(self.vsb.maximum())
             self.vsb.setValue(self.vsb.maximum() + 200)
             QTimer.singleShot(0, self.handle_timeout)
 
@@ -167,11 +343,9 @@ class firstTab(QLabel):
         self.setLayout(self.layout)
 
     def mousePressEvent(self, event):
-        print('Click')
         event.accept()
 
     def keyPressEvent(self, event):
-        print('Key')
         event.accept()
 
 
@@ -179,12 +353,15 @@ class secondTab(QLabel):
     def __init__(self, parent=None):
         QWidget.__init__(self, parent)
 
+        self.file_to_analyse = None
+        self.file_to_analyse_pixmap = None
+        self.file_analysed = None
+        self.file_analysed_pixmap = None
+
         # Creation of the elements
         self.main_layout = QVBoxLayout()
         self.grid_layout = QGridLayout()
 
-        #self.fileselect_layout = QHBoxLayout()
-        #self.from_url_layout = QVBoxLayout()
         self.fileselect = QLabel()
         self.fileselect.setLayout(self.grid_layout)
 
@@ -198,10 +375,13 @@ class secondTab(QLabel):
         self.from_analyse_button.setFocusPolicy(Qt.NoFocus)
         self.from_analyse_button.clicked.connect(self.analyse)
 
-        self.from_url_edit = QTextEdit()
+        self.show_hide_button = QPushButton('Montrer / Cacher les résultats')
+        self.show_hide_button.setFont(FONT)
+        self.show_hide_button.setFocusPolicy(Qt.NoFocus)
+        self.show_hide_button.clicked.connect(self.show_hide)
+        self.show_hide_button.setEnabled(False)
 
-        #self.from_url = QLabel()
-        #self.from_url.setLayout(self.from_url_layout)
+        self.from_url_edit = QTextEdit()
 
         self.from_drive_button = QPushButton("Choisir un fichier sur l'ordinateur")
         self.from_drive_button.setFont(FONT)
@@ -209,86 +389,75 @@ class secondTab(QLabel):
         self.from_drive_button.setFocusPolicy(Qt.NoFocus)
 
         # Composition of the element
-        #self.fileselect.setLayout(self.fileselect_layout)
-
-        self.grid_layout.addWidget(self.from_url_edit, 0, 1)
-        self.grid_layout.addWidget(self.from_url_button, 1, 1)
-        self.grid_layout.addWidget(self.from_drive_button, 1, 0)
-
-
-        #self.fileselect_layout.addWidget(self.from_drive_button, 3, alignment=Qt.AlignBottom)
-        #self.fileselect_layout.addWidget(QLabel(''), 1)  # padding
-       # self.fileselect_layout.addWidget(self.from_url, 3)
+        self.grid_layout.addWidget(QLabel(''), 0, 0)
+        self.grid_layout.addWidget(self.from_url_edit, 1, 1)
+        self.grid_layout.addWidget(self.from_url_button, 2, 1)
+        self.grid_layout.addWidget(self.from_drive_button, 2, 0)
 
         self.image_ph = QLabel()
 
         self.main_layout.addWidget(self.fileselect, 1)
         self.main_layout.addWidget(self.image_ph, 5, alignment=Qt.AlignCenter)
         self.main_layout.addWidget(self.from_analyse_button, 1)  # padding
+        self.main_layout.addWidget(self.show_hide_button, 1)  # padding
         #self.main_layout.addWidget(QLabel(''), 1)  # padding
 
         self.setLayout(self.main_layout)
 
+    def show_hide(self):
+        if self.displaying_results:
+            self.displaying_results = False
+            self.image_ph.setPixmap(self.file_to_analyse_pixmap)
+
+        else:
+            self.displaying_results = True
+            self.image_ph.setPixmap(self.file_analysed_pixmap)
+
+
     def select_files(self):
         file, check = QFileDialog.getOpenFileName(None, "QFileDialog.getOpenFileName()",
-                                                  "", "All Files (*);;Python Files (*.py);;Text Files (*.txt)")
-        print(type(file))
+                                                  "", "Image Files (*.png *.jpg *.bmp *.jpeg)")
         if check:
-            print(file)
-            self.file_to_analyse = file
-            pm = QPixmap(file)
-            pm = pm.scaledToHeight(600)
-            self.image_ph.setPixmap(pm)
+            self.file_to_analyse = cv2.imread(file)
+            self.file_to_analyse_pixmap = self.convert_cv_qt(self.file_to_analyse)
+            self.file_to_analyse_pixmap = self.file_to_analyse_pixmap.scaledToHeight(IMAGE_HEIGHT)
+            self.image_ph.setPixmap(self.file_to_analyse_pixmap)
+
+    def convert_cv_qt(self, cv_img):
+        """Convert from an opencv image to QPixmap"""
+        rgb_image = cv2.cvtColor(cv_img, cv2.COLOR_BGR2RGB)
+        h, w, ch = rgb_image.shape
+        bytes_per_line = ch * w
+        convert_to_Qt_format = QImage(rgb_image.data, w, h, bytes_per_line, QImage.Format_RGB888)
+
+        return QPixmap.fromImage(convert_to_Qt_format)
 
     def analyse(self):
-        image = instance_segmentation_api(self.file_to_analyse, 'temp2.png')
+        self.file_analysed = instance_segmentation_api(self.file_to_analyse, 'temp2.png')
+        print(type(self.file_analysed))
         from collections import Counter
 
-        pm =QPixmap('temp2.png')
-        pm = pm.scaledToHeight(600)
-        # pixmap.scaledToWidth(1200)
-        self.image_ph.setPixmap(pm)
+        self.file_analysed_pixmap = self.convert_cv_qt(self.file_analysed)
+        self.file_analysed_pixmap = self.file_analysed_pixmap.scaledToHeight(IMAGE_HEIGHT)
+        self.image_ph.setPixmap(self.file_analysed_pixmap)
+
+        self.show_hide_button.setEnabled(True)
+        self.displaying_results = True
 
 
     def select_files_from_url(self):
 
-        fp = os.path.join(os.getcwd(), 'temp.jpg')
-        request.urlretrieve(self.from_url_edit.toPlainText(), fp)
-        pm = QPixmap(fp)
-        pm = pm.scaledToHeight(600)
-        self.file_to_analyse = fp
-        # pixmap = pixmap.scaledToWidth(1200)
+        try:
+            req = urllib.request.urlopen(self.from_url_edit.toPlainText())
+            arr = np.asarray(bytearray(req.read()), dtype=np.uint8)
+            img = cv2.imdecode(arr, -1)
+            self.file_to_analyse = img
 
-        self.image_ph.setPixmap(pm)
-
-    def keyPressEvent(self, event):
-        0
-
-class FaderWidget(QWidget):
-
-    def __init__(self, old_widget, new_widget):
-
-        QWidget.__init__(self, new_widget)
-
-        self.old_pixmap = QPixmap(new_widget.size())
-        old_widget.render(self.old_pixmap)
-        self.pixmap_opacity = 1.0
-
-        #self.timeline = QTimeLine()
-        #self.timeline.valueChanged.connect(self.animate)
-        #self.timeline.finished.connect(self.close)
-        #self.timeline.setDuration(DELAY_FADE)
-        #self.timeline.start()
-
-        self.resize(new_widget.size())
-        self.show()
-
-    def paintEvent(self, event):
-        painter = QPainter()
-        painter.begin(self)
-        painter.setOpacity(self.pixmap_opacity)
-        painter.drawPixmap(0, 0, self.old_pixmap)
-        painter.end()
+            self.file_to_analyse_pixmap = self.convert_cv_qt(self.file_to_analyse)
+            self.file_to_analyse_pixmap = self.file_to_analyse_pixmap.scaledToHeight(IMAGE_HEIGHT)
+            self.image_ph.setPixmap(self.file_to_analyse_pixmap)
+        except:
+            self.from_url_edit.setText('Invalid URL')
 
     def animate(self, value):
         self.pixmap_opacity = 1.0 - value
@@ -354,9 +523,9 @@ if __name__ == "__main__":
 
     layout = QGridLayout(window)
     layout.addWidget(stack, 0, 0, 1, 3)
-    layout.addWidget(page1Button, 1, 0)
-    layout.addWidget(page2Button, 1, 1)
-    layout.addWidget(page3Button, 1, 2)
+    #layout.addWidget(page1Button, 1, 0)
+    #layout.addWidget(page2Button, 1, 1)
+    #layout.addWidget(page3Button, 1, 2)
 
 
     window.showMaximized()

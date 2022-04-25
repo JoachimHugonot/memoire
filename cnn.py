@@ -1,7 +1,7 @@
 import random
 
 import torchvision
-from PIL import Image
+#from PIL import Image
 import cv2
 import numpy as np
 import torchvision.transforms as T
@@ -126,13 +126,8 @@ list_colors = [
 
 ]
 
-def get_prediction(img_path, threshold):
-    img = Image.open(img_path)
-    w, h = img.size
-    ratio = h / 600
-    new_h = int(h / ratio)
-    new_w = int(w / ratio)
-    img = img.resize((new_w, new_h))
+def get_prediction(img, threshold):
+
 
     transform = T.Compose([T.ToTensor()])
     img = transform(img)
@@ -163,22 +158,24 @@ def colour_mask(image, color):
     coloured_mask = np.stack([r, g, b], axis=2)
     return coloured_mask
 
-def instance_segmentation_api(img_path, out_fp, threshold=0.5, rect_th=3, text_size=3, text_th=3):
+def instance_segmentation_api(img, out_fp, threshold=0.5, rect_th=3, text_size=3, text_th=3):
 
-    masks, boxes, pred_cls = get_prediction(img_path, threshold)
-
-
-
-
-    img = cv2.imread(img_path)
-    print(img.shape)
-    h,w,_ = img.shape
+    print('api', img.shape)
+    h, w, _ = img.shape
     ratio = h / 600
     new_h = int(h / ratio)
     new_w = int(w / ratio)
     img = cv2.resize(img, (new_w, new_h))
     print(img.shape)
+    print()
     img //= 2
+
+    masks, boxes, pred_cls = get_prediction(img, threshold)
+
+
+
+
+
 
     # img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
 
@@ -205,6 +202,6 @@ def instance_segmentation_api(img_path, out_fp, threshold=0.5, rect_th=3, text_s
         if new:
             cv2.putText(img,pred_cls[i], [x1, y1], cv2.FONT_HERSHEY_SIMPLEX, 1, color,thickness=2)
     # img = cv2.cvtColor(img, cv2.COLOR_RGB2BGR)
-    cv2.imwrite(out_fp, img)
+    return img
 
 
