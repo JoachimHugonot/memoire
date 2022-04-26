@@ -1,6 +1,7 @@
 import random
 
 import torchvision
+import time
 #from PIL import Image
 import cv2
 import numpy as np
@@ -126,12 +127,12 @@ list_colors = [
 
 ]
 
-def get_prediction(img, threshold):
-
-
+def get_prediction(img, threshold,s):
+    print(time.time() - s)
     transform = T.Compose([T.ToTensor()])
     img = transform(img)
     pred = model([img])
+    print(time.time() - s)
     pred_score = list(pred[0]['scores'].detach().numpy())
     pred_t = [pred_score.index(x) for x in pred_score if x>threshold][-1]
     masks = (pred[0]['masks']>0.5).squeeze().detach().cpu().numpy()
@@ -158,7 +159,9 @@ def colour_mask(image, color):
     coloured_mask = np.stack([r, g, b], axis=2)
     return coloured_mask
 
-def instance_segmentation_api(img, out_fp, threshold=0.5, rect_th=3, text_size=3, text_th=3):
+def instance_segmentation_api(img, pb, threshold=0.5, rect_th=3, text_size=3, text_th=3):
+    import time
+    s = time.time()
 
     print('api', img.shape)
     h, w, _ = img.shape
@@ -170,8 +173,8 @@ def instance_segmentation_api(img, out_fp, threshold=0.5, rect_th=3, text_size=3
     print()
     img //= 2
 
-    masks, boxes, pred_cls = get_prediction(img, threshold)
-
+    masks, boxes, pred_cls = get_prediction(img, threshold,s)
+    print(time.time() - s)
 
 
 
@@ -182,6 +185,7 @@ def instance_segmentation_api(img, out_fp, threshold=0.5, rect_th=3, text_size=3
     SEEN = []
     COLORS = []
     for i in range(len(masks)):
+        #if pred_cls[i] not in ['personne', 'bouteille', 'chat']: continue
         new = False
         if not pred_cls[i] in SEEN:
             SEEN.append(pred_cls[i])
@@ -200,10 +204,11 @@ def instance_segmentation_api(img, out_fp, threshold=0.5, rect_th=3, text_size=3
         x2 = int(x2)
         y2 = int(y2)
 
-        cv2.rectangle(img, [x1, y1], [x2, y2],color=color, thickness=2)
+        cv2.rectangle(img, [x1, y1], [x2, y2],color=color, thickness=1)
         if new:
-            cv2.putText(img,pred_cls[i], [x1, y1], cv2.FONT_HERSHEY_SIMPLEX, 1, color,thickness=2)
+           0#cv2.putText(img,pred_cls[i], [x1, y1], cv2.FONT_HERSHEY_COMPLEX_SMALL, 1, color,thickness=2)
     # img = cv2.cvtColor(img, cv2.COLOR_RGB2BGR)
+    print(time.time() - s)
     return img, SEEN, COLORS
 
 
