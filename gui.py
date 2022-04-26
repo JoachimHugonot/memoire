@@ -13,7 +13,7 @@ from PyQt5.QtGui import *
 from PyQt5.QtCore import *
 
 global FONT, DELAY_FADE,ELEMENT_BY_ELEMENT, IMAGE_HEIGHT, SCREEN_WIDTH, SCREEN_HEIGHT, WIDTH_PERCENTAGE
-ELEMENT_BY_ELEMENT = True
+ELEMENT_BY_ELEMENT = False
 
 def pixel_to_pt(pixel):
     return int(pixel * 12 / 16)
@@ -240,8 +240,6 @@ class MainWindow(QWidget):
         #formLayout.addWidget(Padding(900))
         #formLayout.setSizeConstraint(QLayout.SetFixedSize)
 
-
-
     def mousePressEvent(self, event):
         event.accept()
 
@@ -259,34 +257,6 @@ class MainWindow(QWidget):
     def handle_timeout(self):
         x = self.vsb.maximum()
         self.vsb.setValue(x)
-
-class firstTab(QLabel):
-    def __init__(self, parent=None):
-        QWidget.__init__(self, parent)
-
-        # Creation of the elements
-        self.layout = QVBoxLayout()
-
-        self.text_1 = QLabel('Imaginez vous en train d\'acheter un produit de beauté à la Coop...')
-        self.text_1.setFont(FONT)
-
-        self.image_1 = QPixmap('ASSETS/COOP.jpg')
-        self.image_1 = self.image_1.scaledToWidth(1200)
-
-        self.image_ph1 = QLabel()
-        self.image_ph1.setPixmap(self.image_1)
-
-        # Composition of the elements
-        self.layout.addWidget(self.text_1, 1, alignment=Qt.AlignCenter)
-        self.layout.addWidget(self.image_ph1, 10, alignment=Qt.AlignCenter)
-        self.layout.addWidget(QLabel(), 100)  # Padding
-        self.setLayout(self.layout)
-
-    def mousePressEvent(self, event):
-        event.accept()
-
-    def keyPressEvent(self, event):
-        event.accept()
 
 
 class secondTab(QLabel):
@@ -451,6 +421,7 @@ class secondTab(QLabel):
         self.message.setIcon(QMessageBox.Information)
         self.message.setText('Analysing')
         self.message.show()
+
         QTimer.singleShot(100, self.handle_t)
 
 
@@ -475,75 +446,24 @@ class secondTab(QLabel):
         self.repaint()
 
 
-class StackedWidget(QStackedWidget):
-
-    def __init__(self, parent = None):
-        QStackedWidget.__init__(self, parent)
-
-    def setCurrentIndex(self, index):
-        #self.fader_widget = FaderWidget(self.currentWidget(), self.widget(index))
-        QStackedWidget.setCurrentIndex(self, index)
-
-    def set_page1(self):
-        self.setCurrentIndex(0)
-        w1.setFocus()
-
-    def set_page2(self):
-        self.setCurrentIndex(1)
-        w2.setFocus()
-
-    def set_page3(self):
-        self.setCurrentIndex(2)
-        w3.setFocus()
-
-
 if __name__ == "__main__":
 
     app = QApplication(sys.argv)
     SCREEN_WIDTH = app.primaryScreen().size().width()
     SCREEN_HEIGHT = app.primaryScreen().size().height()
 
-    global window
+    global window, w1
     window = QWidget()
     #window.resize(1500, 750)
 
-    w1 = firstTab()
-    w2 = QLabel()#secondTab()
-    w3 = MainWindow()
+    w1 = MainWindow()
 
-
-
-    stack = StackedWidget()
-
-    stack.addWidget(w3)
-    stack.addWidget(w2)
-    stack.addWidget(w1)
-
-    page1Button = QPushButton("Page 1")
-    page1Button.setFocusPolicy(Qt.NoFocus)
-    page2Button = QPushButton("Page 2")
-    page2Button.setFocusPolicy(Qt.NoFocus)
-
-    page3Button = QPushButton("Page 3")
-    page3Button.setFocusPolicy(Qt.NoFocus)
-
-    page1Button.setFont(FONT)
-    page2Button.setFont(FONT)
-    page3Button.setFont(FONT)
-
-    page1Button.clicked.connect(stack.set_page1)
-    page2Button.clicked.connect(stack.set_page2)
-    page3Button.clicked.connect(stack.set_page3)
 
     layout = QGridLayout(window)
-    layout.addWidget(stack, 0, 0, 1, 3)
+    layout.addWidget(w1, 0, 0, 1, 3)
     #layout.addWidget(page1Button, 1, 0)
-    #layout.addWidget(page2Button, 1, 1)
-    #layout.addWidget(page3Button, 1, 2)
-
 
     window.showMaximized()
-
 
     w1.setFocus()
 

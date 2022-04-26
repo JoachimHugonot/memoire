@@ -204,7 +204,7 @@ def instance_segmentation_api(img, pb, threshold=0.5, rect_th=3, text_size=3, te
         x2 = int(x2)
         y2 = int(y2)
 
-        cv2.rectangle(img, [x1, y1], [x2, y2],color=color, thickness=1)
+        #cv2.rectangle(img, [x1, y1], [x2, y2],color=color, thickness=1)
         if new:
            0#cv2.putText(img,pred_cls[i], [x1, y1], cv2.FONT_HERSHEY_COMPLEX_SMALL, 1, color,thickness=2)
     # img = cv2.cvtColor(img, cv2.COLOR_RGB2BGR)
