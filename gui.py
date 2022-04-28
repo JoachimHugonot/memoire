@@ -13,16 +13,20 @@ from PyQt5.QtGui import *
 from PyQt5.QtCore import *
 
 global FONT, DELAY_FADE,ELEMENT_BY_ELEMENT, IMAGE_HEIGHT, SCREEN_WIDTH, SCREEN_HEIGHT, WIDTH_PERCENTAGE
-ELEMENT_BY_ELEMENT = False
+ELEMENT_BY_ELEMENT = True
+
 
 def pixel_to_pt(pixel):
     return int(pixel * 12 / 16)
+
+
 def pt_to_pixel(pt):
     return int(pt * 16 / 12)
+
 FONT = QFont('Helvetica', pixel_to_pt(30))
 FONT_TITLE = QFont('Helvetica', pixel_to_pt(50))
 IMAGE_HEIGHT = 600
-WIDTH_PERCENTAGE = 0.75
+WIDTH_PERCENTAGE = 0.95
 line_height = 1.5
 
 class Padding(QLabel):
@@ -35,8 +39,8 @@ class Title(QLabel):
         super().__init__()
         self.setText(text)
         self.setFont(FONT_TITLE)
-        self.setFixedHeight(110)
-        self.setStyleSheet('margin-top: 50px; margin-bottom: 10px; color:lightBlue')
+        self.setFixedHeight(160)
+        self.setStyleSheet('margin-top: 100px; margin-bottom: 10px; color:lightBlue')
         self.setAlignment(Qt.AlignCenter)
         print(int(WIDTH_PERCENTAGE * SCREEN_WIDTH))
         self.setFixedWidth(int(WIDTH_PERCENTAGE * SCREEN_WIDTH))
@@ -84,13 +88,13 @@ class MainWindow(QWidget):
         self.scroll.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
         self.scroll.horizontalScrollBar().setEnabled(False)
 
+
         layout = QVBoxLayout(self)
         layout.addWidget(self.scroll)
 
         # Creation of the elements
         self.layout = QVBoxLayout()
         WIDGETS_ONE = [
-            Padding(300),
             Title('Que peuvent révéler mes données ?'),
             #QPixmap('ASSETS/LOGO2.png'),
             # QPixmap('ASSETS/COOP.jpg'),
@@ -140,26 +144,26 @@ class MainWindow(QWidget):
                  'Vous pouvez même utilisez vos photos personelles sans craintes : Aucune image ne sera sauvegardée par ce programme</p>'),
 
 
-            secondTab(self.scroll),
-            Title("Et Alors ?"),
+            secondTab(),
+            #Title("Et Alors ?"),
 
-            Title("Vos informations"),
-            Text('<p style="line-height:'+str(line_height)+';">Avez-vous déjà effectué une recherche sur un moteur de recherche et vu une publicité en rapport immédiatement après ?<br>'
-                 'Savez-vous comment Google (et Facebook) gagnent t-ils de l’argent ? <br>'
-                 'Avec la publicité<br>'
-                 'notre profil est transmis à des entreprises qui payent Google pour nous afficher de la publicité.<br>'
-                 'Google et Facebook ne sont pas des entreprises qui développent des logiciels, mais bien des entreprises de publicité<br>'
-                 'En 2021, le chiffre d\'affaires de Google a été de 257 milliards, 80% de ces revenus proviennent de la publicité</p>'),
-
-
+            #Title("Vos informations"),
+            #Text('<p style="line-height:'+str(line_height)+';">Avez-vous déjà effectué une recherche sur un moteur de recherche et vu une publicité en rapport immédiatement après ?<br>'
+           #      'Savez-vous comment Google (et Facebook) gagnent t-ils de l’argent ? <br>'
+            #      'Avec la publicité<br>'
+            #     'notre profil est transmis à des entreprises qui payent Google pour nous afficher de la publicité.<br>'
+            #     'Google et Facebook ne sont pas des entreprises qui développent des logiciels, mais bien des entreprises de publicité<br>'
+            #     'En 2021, le chiffre d\'affaires de Google a été de 257 milliards, 80% de ces revenus proviennent de la publicité</p>'),
 
 
-            Text('Nos ordinateurs sont désormais capables d’analyser automatiquement les photos et les vidéos grâce à l’intelligence artificielle'),
-            Text('Qui a accès à vos photos/vidéos et à le droit de les utiliser afin d’en tirer des informations vous concernant ? Probablement tous les services que vous utilisez sur vos smartphones'),
-            Text('Un simple achat d’un produit de beauté peut permettre à un inconnu de savoir si vous êtes enceinte.'),
 
-            Text("Maintenant imaginez ce que les géants du domaine (Google et Facebook) savent sur vous. "),
-            Text("La gratuité de votre expérience sur vos smartphones à un coût"),
+
+            #Text('Nos ordinateurs sont désormais capables d’analyser automatiquement les photos et les vidéos grâce à l’intelligence artificielle'),
+            #Text('Qui a accès à vos photos/vidéos et à le droit de les utiliser afin d’en tirer des informations vous concernant ? Probablement tous les services que vous utilisez sur vos smartphones'),
+            #Text('Un simple achat d’un produit de beauté peut permettre à un inconnu de savoir si vous êtes enceinte.'),
+
+            #Text("Maintenant imaginez ce que les géants du domaine (Google et Facebook) savent sur vous. "),
+            #Text("La gratuité de votre expérience sur vos smartphones à un coût"),
 
             #QLabel("Ces algorithmes peuvent analyser une très grande quantité de données afin d’en tirer des informations précieuses"),
             #QLabel("Ces algorithmes peuvent analyser une très grande quantité de données afin d’en tirer des informations précieuses"),
@@ -238,31 +242,35 @@ class MainWindow(QWidget):
             if ELEMENT_BY_ELEMENT :
                 el.hide()
         #formLayout.addWidget(Padding(900))
-        #formLayout.setSizeConstraint(QLayout.SetFixedSize)
+        #formLayout.setSpacing(0)
+        formLayout.setContentsMargins(0,0,0,0)
+        formLayout.setSizeConstraint(QLayout.SetFixedSize)
 
     def mousePressEvent(self, event):
         event.accept()
 
     def keyPressEvent(self, event):
-        print('keypress')
+
         if Qt.Key_N == event.key():
-            print('keypress N')
+
             for el in self.ELEMENTS:
                 if not el.isVisible():
+
                     el.show()
                     break
-            self.vsb.setValue(self.vsb.maximum() + 200)
-            QTimer.singleShot(0, self.handle_timeout)
+            #self.vsb.setValue(self.vsb.maximum() + 200)
+            QTimer.singleShot(100, self.handle_timeout)
+            print(self.ELEMENTS[-1].pos().x())
 
     def handle_timeout(self):
         x = self.vsb.maximum()
-        self.vsb.setValue(x)
+        print(x)
+        self.vsb.setValue(x+200)
 
 
 class secondTab(QLabel):
-    def __init__(self, scroll, parent=None):
+    def __init__(self, parent=None):
         QWidget.__init__(self, parent)
-        self.scroll = scroll
 
         self.file_to_analyse = None
         self.file_to_analyse_pixmap = None
@@ -308,9 +316,9 @@ class secondTab(QLabel):
         self.grid_layout.addWidget(self.from_url_button, 2, 1)
         self.grid_layout.addWidget(self.from_drive_button, 2, 0)
 
-        self.from_url_edit.setFixedWidth(int(SCREEN_WIDTH * WIDTH_PERCENTAGE / 2.0))
-        self.from_url_button.setFixedWidth(int(SCREEN_WIDTH * WIDTH_PERCENTAGE / 2.0))
-        self.from_drive_button.setFixedWidth(int(SCREEN_WIDTH * WIDTH_PERCENTAGE / 2.0))
+        self.from_url_edit.setFixedWidth(int(SCREEN_WIDTH * WIDTH_PERCENTAGE / 3.0))
+        self.from_url_button.setFixedWidth(int(SCREEN_WIDTH * WIDTH_PERCENTAGE / 3.0))
+        self.from_drive_button.setFixedWidth(int(SCREEN_WIDTH * WIDTH_PERCENTAGE / 3.0))
 
         self.from_url_edit.setFixedHeight(60)
         self.from_url_button.setFixedHeight(40)
@@ -339,18 +347,16 @@ class secondTab(QLabel):
         self.main_layout.addWidget(self.fileselect, 1)
         self.main_layout.addWidget(self.image_ph, 5, alignment=Qt.AlignCenter)
 
-        self.pb = QProgressBar(
-
-        )
-        self.pb.setGeometry(0, 0, 300, 25)
-
         self.main_layout.addWidget(self.labels_ph, 1)  # padding
-        self.main_layout.addWidget(self.pb, 1)  # padding
         self.main_layout.addWidget(self.from_analyse_button, 1)  # padding
         self.main_layout.addWidget(self.show_hide_button, 1)  # padding
         #self.main_layout.addWidget(QLabel(''), 1)  # padding
         self.displaying_results = False
         self.setLayout(self.main_layout)
+        self.file_to_analyse = cv2.imread('SAMPLES/01.jpeg')
+        self.file_to_analyse_pixmap = self.convert_cv_qt(self.file_to_analyse)
+        self.file_to_analyse_pixmap = self.file_to_analyse_pixmap.scaledToHeight(IMAGE_HEIGHT)
+        self.image_ph.setPixmap(self.file_to_analyse_pixmap)
 
     def show_hide(self):
         if self.displaying_results:
@@ -386,6 +392,11 @@ class secondTab(QLabel):
             self.file_to_analyse_pixmap = self.file_to_analyse_pixmap.scaledToHeight(IMAGE_HEIGHT)
             self.image_ph.setPixmap(self.file_to_analyse_pixmap)
 
+
+            self.displaying_results = False
+            self.labels_ph.setText('')
+            self.show_hide_button.setEnabled(False)
+
     def convert_cv_qt(self, cv_img):
         """Convert from an opencv image to QPixmap"""
         rgb_image = cv2.cvtColor(cv_img, cv2.COLOR_BGR2RGB)
@@ -394,19 +405,14 @@ class secondTab(QLabel):
         convert_to_Qt_format = QImage(rgb_image.data, w, h, bytes_per_line, QImage.Format_RGB888)
 
         return QPixmap.fromImage(convert_to_Qt_format)
+
     def handle_t(self):
-
-        self.file_analysed, self.SEEN, self.COLORS = instance_segmentation_api(self.file_to_analyse, self.pb)
-
-
-        print(type(self.file_analysed))
-        from collections import Counter
+        self.file_analysed, self.SEEN, self.COLORS = instance_segmentation_api(self.file_to_analyse)
 
         self.file_analysed_pixmap = self.convert_cv_qt(self.file_analysed)
         self.file_analysed_pixmap = self.file_analysed_pixmap.scaledToHeight(IMAGE_HEIGHT)
         self.show_hide()
 
-        #self.image_ph.setPixmap(self.file_analysed_pixmap)
 
         self.show_hide_button.setEnabled(True)
         self.message.close()
@@ -414,8 +420,6 @@ class secondTab(QLabel):
 
 
     def analyse(self):
-
-
         self.message = QMessageBox()
         self.message.setWindowFlags(Qt.FramelessWindowHint)
         self.message.setIcon(QMessageBox.Information)
@@ -438,6 +442,9 @@ class secondTab(QLabel):
             self.file_to_analyse_pixmap = self.convert_cv_qt(self.file_to_analyse)
             self.file_to_analyse_pixmap = self.file_to_analyse_pixmap.scaledToHeight(IMAGE_HEIGHT)
             self.image_ph.setPixmap(self.file_to_analyse_pixmap)
+            self.displaying_results = False
+            self.labels_ph.setText('')
+            self.show_hide_button.setEnabled(False)
         except:
             self.from_url_edit.setText('Invalid URL')
 

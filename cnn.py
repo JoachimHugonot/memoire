@@ -127,12 +127,10 @@ list_colors = [
 
 ]
 
-def get_prediction(img, threshold,s):
-    print(time.time() - s)
+def get_prediction(img, threshold):
     transform = T.Compose([T.ToTensor()])
     img = transform(img)
     pred = model([img])
-    print(time.time() - s)
     pred_score = list(pred[0]['scores'].detach().numpy())
     pred_t = [pred_score.index(x) for x in pred_score if x>threshold][-1]
     masks = (pred[0]['masks']>0.5).squeeze().detach().cpu().numpy()
@@ -159,28 +157,17 @@ def colour_mask(image, color):
     coloured_mask = np.stack([r, g, b], axis=2)
     return coloured_mask
 
-def instance_segmentation_api(img, pb, threshold=0.5, rect_th=3, text_size=3, text_th=3):
-    import time
-    s = time.time()
+def instance_segmentation_api(img, threshold=0.5, rect_th=3, text_size=3, text_th=3):
 
-    print('api', img.shape)
+
     h, w, _ = img.shape
     ratio = h / 600
     new_h = int(h / ratio)
     new_w = int(w / ratio)
     img = cv2.resize(img, (new_w, new_h))
-    print(img.shape)
-    print()
     img //= 2
 
-    masks, boxes, pred_cls = get_prediction(img, threshold,s)
-    print(time.time() - s)
-
-
-
-
-
-    # img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+    masks, boxes, pred_cls = get_prediction(img, threshold)
 
     SEEN = []
     COLORS = []
@@ -208,7 +195,7 @@ def instance_segmentation_api(img, pb, threshold=0.5, rect_th=3, text_size=3, te
         if new:
            0#cv2.putText(img,pred_cls[i], [x1, y1], cv2.FONT_HERSHEY_COMPLEX_SMALL, 1, color,thickness=2)
     # img = cv2.cvtColor(img, cv2.COLOR_RGB2BGR)
-    print(time.time() - s)
+
     return img, SEEN, COLORS
 
 
