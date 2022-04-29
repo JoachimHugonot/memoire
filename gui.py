@@ -145,16 +145,9 @@ class MainWindow(QWidget):
             Title("Comment est-ce possible ?"),
             Text('<p style="line-height:'+str(line_height)+';">Grâce à l\'historique d\'achats de ses 2 millions de clients quotidiens.<br>'
                  'Un humain ne peut pas analyser toutes ces données à la main. Un ordinateur, oui.<br>'
-                  'Avez-vous déjà entendu parler d\'intelligence artificielle, de réseaux de neurones ou de deep learning ?'
-                  'C\'est ce qui permet aux entreprises de transformer vos données en argent.'),
+                  'Avez-vous déjà entendu parler d\'intelligence artificielle, de réseaux de neurones ou de deep learning ? <br>'
+                  'C\'est ce qui permet aux entreprises de transformer vos données en argent.</p>'),
 
-            Title("Un ordinateur !"),
-            Text('<p style="line-height:'+str(line_height)+';">Plus spécifiquement, les entreprises utilisent l’intelligence artificielle.<br>'
-                 'Les termes suivant vous sont peut-être familiers :<br>'
-                 'I.A.(Intelligence artificielle)<br>'
-                 'Réseau de neurones / Neural networks<br>'
-                 'Deep learning / apprentissage en profondeur<br>'
-                 'Ces algorithmes peuvent analyser une très grande quantité de données afin d’en tirer des informations précieuses</p>'),
 
             QPixmap("ASSETS/COMPUTER.png"),
             Title('Un réseau de neurones ? Essayez !'),
