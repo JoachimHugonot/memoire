@@ -32,7 +32,7 @@ line_height = 1.5
 class Padding(QLabel):
     def __init__(self, height):
         super().__init__()
-        self.setMinimumHeight(height)
+        self.setFixedHeight(height)
 
 class Title(QLabel):
     def __init__(self, text):
@@ -95,41 +95,58 @@ class MainWindow(QWidget):
         # Creation of the elements
         self.layout = QVBoxLayout()
         WIDGETS_ONE = [
-            Title('Que peuvent révéler mes données ?'),
+            #[Title('Que peuvent révéler mes données ?'),
             #QPixmap('ASSETS/LOGO2.png'),
             # QPixmap('ASSETS/COOP.jpg'),
 
-                Text('<p style="line-height:'+str(line_height)+';">Imaginez vous en train d\'acheter un produit de beauté à la Coop.<br>'
-                 'Vous réglez vos achats avec votre supercard.<br>'
-                 'Le magasin a donc accès à votre historique d’achats.</p>')
-                #QPixmap('ASSETS/SUPER_CARD.PNG')
-            ,
-            Title('Que peut en déduire le magasin ?'),
-            Text('<p style="line-height:'+str(line_height)+';">Essayer d\'imaginer ce que l\'enseigne peut apprendre avec l\'achat d\'un produit de beauté.<br>'
-                 "Pensez-vous que cette information pourrait permettre d'apprendre des informations:<br>"
-                  "<span style=\"color:yellow\">Pas</span> personnelles à votre sujet<br>"
-                  "<span style=\"color:orange\">Peu</span> personnelles à votre sujet<br>"
-                  "<span style=\"color:red\">Très</span> personnelles à votre sujet</p>"),
-            Title('Des informations <span style=\"color:red\">très</span> personelles !'),
-            Text('<p style="line-height:'+str(line_height)+';">En 2012, une chaîne d’hypermarché (Target) a compris qu’une adolescente était enceinte avant sa famille.<br>'
-                 'Les femmes enceintes achètent plus facilement des produits avec des parfums neutres.<br>'
-                 'L\'adolescente qui achetait des produits très parfumé a subitement commencé à acheter des produits aux parfums neutres.<br>'
-                 '<a href=\"https://ladigitale.dev/digiread/#/a/6262819b4f474\">Le lien vers l\'article</a><br>'
-                   'Un simple achat peut en dire beaucoup sur vous</p>'
-                 ),
-            # QPixmap('ASSETS/10.png'),
-            # QPixmap("ASSETS/MONEY.png"),
-            Title("Pourquoi les entreprises veulent obtenir ces informations ?"),
-            Text('<p style="line-height:'+str(line_height)+';">Les entreprises ne sont pas intéressées par nos informations personnelles mais bien par gagner de l’argent !<br>'
-                 'Target en estimant que l’adolescente était enceinte lui a envoyé des publicités pour des couches et des berceaux.<br>'
-                 'Une carte de fidélité nous fait économiser des sous, mais nous donnons nos informations en échange<br></p>'),
+            #   Text('<p style="line-height:'+str(line_height)+';">Imaginez vous en train d\'acheter un produit de beauté à la Coop.<br>'
+            #    'Vous réglez vos achats avec votre supercard.<br>'
+            #    'Le magasin a donc accès à votre historique d’achats.</p>'),
 
-            Title("Comment ont-ils fait cela ?"),
-            Text('<p style="line-height:'+str(line_height)+';">Avec l\'historique d\'achats de ses clientes<br>'
-                 '2 millions de clients font leurs courses quotidiennement chez Target<br>'
-                 'C\'est énormément de données à analyser, il n’est pas envisageable de les analyser à la main.<br>'
-                 'Pensez-vous à quelque chose qui pourrait facilement analyser d’énormes quantités de données ?'),
-            #QPixmap("ASSETS/COMPUTER.png"),
+            #   QPixmap('ASSETS/SUPER_CARD.PNG')]
+            #,
+            Title('Que disent mes données sur moi ?'),
+             # QPixmap('ASSETS/LOGO2.png'),
+             # QPixmap('ASSETS/COOP.jpg'),
+
+             Text('<p style="line-height:' + str(
+                 line_height) + ';">Vous êtes en train d\'acheter un shampooing.<br>'
+                                'Vous réglez vos achats avec votre carte de fidélité.<br>'
+                                'Le magasin a donc accès à votre historique d’achats.</p>'),
+             Padding(5),
+             QPixmap('ASSETS/SUPER_CARD.PNG')
+            ,
+            Title('Que sait le magasin sur vous ?'),
+            Text('<p style="line-height:'+str(line_height)+';">Le magasin sait quel shampooing vous venez d\'acheter.<br>'
+
+                  "Est-ce que vous pensez que cette information personelle révèle beaucoup à votre sujet ?<br>"
+                  "<span style=\"color:green\">Non, pas du tout </span>  <br>"
+                  "<span style=\"color:orange\">Un peu, rien d'important</span>  <br>"
+                  "<span style=\"color:red\">Oui, beaucoup trop</span>  </p>"),
+
+            Title('Un simple achat peut en dire beaucoup sur vous !'),
+            Text('<p style="line-height:'+str(line_height)+';">En 2012, un magasin a appris qu’une adolescente était enceinte avant que sa famille ne l\'apprenne.<br>'
+                 'Elle a juste acheté un shampooing sans parfum et le magasin en a déduit qu\'elle était enceinte.<br>'
+                 'En effet, les femmes enceintes préfèrent acheter des produits sans parfum.<br>'
+                 #'L\'adolescente qui achetait des produits très parfumé a subitement commencé à acheter des produits aux parfums neutres.<br>'
+                 '<a href=\"https://ladigitale.dev/digiread/#/a/6262819b4f474\">Je veux en savoir plus</a><br>'
+                  # 'Un simple achat peut en dire beaucoup sur vous</p>'
+                 ),
+            Padding(5),
+            QPixmap('ASSETS/LOGO2.png'),
+            # QPixmap("ASSETS/MONEY.png"),
+            Title("Pourquoi les entreprises veulent mes données ?"),
+            Text('<p style="line-height:'+str(line_height)+';">Les entreprises gagnent de l\'argent avec vos informations personnelles<br>'
+                 'Le magasin les a utilisées pour personnaliser la publicité envoyée à l\'adolescente : des couches et des berceaux.<br>'
+                 'Une carte de fidélité nous fait économiser de l\'argent, mais en échange, nous payons avec nos informations personelles...<br>'
+                 '... afin que les entreprises gagnent encore plus d\'argent !</p>'),
+            Padding(5),
+            QPixmap("ASSETS/MONEY.png"),
+            Title("Comment est-ce possible ?"),
+            Text('<p style="line-height:'+str(line_height)+';">Grâce à l\'historique d\'achats de ses 2 millions de clients quotidiens.<br>'
+                 'Un humain ne peut pas analyser toutes ces données à la main. Un ordinateur, oui.<br>'
+                  'Avez-vous déjà entendu parler d\'intelligence artificielle, de réseaux de neurones ou de deep learning ?'
+                  'C\'est ce qui permet aux entreprises de transformer vos données en argent.'),
 
             Title("Un ordinateur !"),
             Text('<p style="line-height:'+str(line_height)+';">Plus spécifiquement, les entreprises utilisent l’intelligence artificielle.<br>'
@@ -138,23 +155,31 @@ class MainWindow(QWidget):
                  'Réseau de neurones / Neural networks<br>'
                  'Deep learning / apprentissage en profondeur<br>'
                  'Ces algorithmes peuvent analyser une très grande quantité de données afin d’en tirer des informations précieuses</p>'),
-            Title('A vous d\'essayer'),
-            Text('<p style="line-height:'+str(line_height)+';">Vous allez pouvoir jouer avec un réseau de neurones qui analyse des images automatiquement<br>'
-                 'Vous pouvez utiliser une image de votre ordinateur, ou le lien d\'une image sur internet<br>'
-                 'Vous pouvez même utilisez vos photos personelles sans craintes : Aucune image ne sera sauvegardée par ce programme</p>'),
+
+            QPixmap("ASSETS/COMPUTER.png"),
+            Title('Un réseau de neurones ? Essayez !'),
+            Text('<p style="line-height:'+str(line_height)+';">Maintenant, vous allez analyser des photos avec un réseau de neurones. <br>'
+                 #'Vous pouvez utiliser une image de votre ordinateur, ou le lien d\'une image sur internet<br>'
+                 'N\'hésitez pas à analyser vos photos personelles : nous garantissons que nous ne gardons aucune image.</p>'),
 
 
             secondTab(),
-            #Title("Et Alors ?"),
-
-            #Title("Vos informations"),
-            #Text('<p style="line-height:'+str(line_height)+';">Avez-vous déjà effectué une recherche sur un moteur de recherche et vu une publicité en rapport immédiatement après ?<br>'
-           #      'Savez-vous comment Google (et Facebook) gagnent t-ils de l’argent ? <br>'
-            #      'Avec la publicité<br>'
-            #     'notre profil est transmis à des entreprises qui payent Google pour nous afficher de la publicité.<br>'
-            #     'Google et Facebook ne sont pas des entreprises qui développent des logiciels, mais bien des entreprises de publicité<br>'
-            #     'En 2021, le chiffre d\'affaires de Google a été de 257 milliards, 80% de ces revenus proviennent de la publicité</p>'),
-
+            Title("Et alors ?"),
+            Text('<p style="line-height:'+str(line_height)+';">TODO <br>'
+                 "Photo analysée + problématique<br>"
+                 "Sur le marché du travail dans quelques années<br>"
+                 "Navigation privée + nom/prénom<br>"
+                 "Les services que vous utilisez peuvent utiliser, vos informations. Optionellement lien prochaine partie </p>"
+                 ),
+            Title("Vos informations"),
+            Text('<p style="line-height:'+str(line_height)+';">Avez-vous déjà effectué une recherche sur un moteur de recherche et vu une publicité en rapport immédiatement après ?<br>'
+                 'Savez-vous comment Google (et Facebook) gagnent t-ils de l’argent ? <br>'
+              'Avec la publicité<br>'
+             'notre profil est transmis à des entreprises qui payent Google pour nous afficher de la publicité.<br>'
+                 'Google et Facebook ne sont pas des entreprises qui développent des logiciels, mais bien des entreprises de publicité<br>'
+                 'En 2021, le chiffre d\'affaires de Google a été de 257 milliards, 80% de ces revenus proviennent de la publicité</p>'),
+            Padding(5),
+            QPixmap("ASSETS/ADS.webp")
 
 
 
@@ -203,7 +228,7 @@ class MainWindow(QWidget):
             elif type(widget) == Padding:
                 # widget.setWordWrap(True)
                 widget.setFont(FONT)
-                widget.setFixedHeight(50)
+                #widget.setFixedHeight(50)
                 # widget.setFixedWidth(1600)
 
                 widget.setWordWrap(True)
@@ -216,23 +241,46 @@ class MainWindow(QWidget):
                     widget.setTextInteractionFlags(Qt.TextBrowserInteraction)
                     widget.setOpenExternalLinks(True)
             elif type(widget) == list:
-                print(widget[0])
-                print(widget[1])
+                title, text, image = widget
+
+                assert type(title) == Title
+                assert type(text) == Text
+                assert type(image) == QPixmap
+
+                lay = QVBoxLayout()
                 pane = QLabel()
-                layout = QHBoxLayout()
-                pane.setLayout(layout)
-                widget[0].setStyleSheet('background:grey;')
+                subPane = QLabel()
+                sublay = QHBoxLayout()
+
+                lay.setSizeConstraint(QLayout.SetFixedSize)
+
+                pane.setLayout(lay)
+                subPane.setLayout(sublay)
+                lay.addWidget(title)
+                lay.addWidget(subPane)
+
+                sublay.addWidget(text)
+                text.setAlignment(Qt.AlignRight)
+                text.setFixedWidth(int(SCREEN_WIDTH * 0.75))
+                image = image.scaledToWidth(int(SCREEN_WIDTH * 0.20))
+
+               # sys.exit()
+
+                #layout = QHBoxLayout()
+                #pane.setLayout(layout)
+                #widget[0].setStyleSheet('background:grey;')
                 image_ph = QLabel()
-                widget[1] = widget[1].scaledToHeight(200)
-                image_ph.setPixmap(widget[1])
+                #widget[2] = widget[2].scaledToHeight(200)
+                image_ph.setPixmap(image)
 
-                layout.addWidget(widget[0])
-                layout.addWidget(image_ph)
+                sublay.addWidget(image_ph)
+
+                #layout.addWidget(widget[0])
+                #layout.addWidget(image_ph)
 
 
-                pane.setFixedWidth(widget[0].width() +image_ph.width())
-                pane.setFixedHeight(max(widget[0].height(), image_ph.height()))
-
+                #pane.setFixedWidth(widget[0].width() +image_ph.width())
+                #pane.setFixedHeight(max(widget[0].height(), image_ph.height()))
                 self.ELEMENTS.append(pane)
                 formLayout.addWidget(pane, alignment=Qt.AlignCenter)
 
@@ -253,11 +301,13 @@ class MainWindow(QWidget):
 
         if Qt.Key_N == event.key():
 
-            for el in self.ELEMENTS:
+            for idx, el in enumerate(self.ELEMENTS):
                 if not el.isVisible():
 
                     el.show()
-                    break
+
+                    if idx != len(self.ELEMENTS) - 1 and type(self.ELEMENTS[idx+1])  in [Title] :
+                        break
             #self.vsb.setValue(self.vsb.maximum() + 200)
             QTimer.singleShot(100, self.handle_timeout)
             print(self.ELEMENTS[-1].pos().x())
@@ -287,7 +337,7 @@ class secondTab(QLabel):
         self.fileselect = QLabel()
         self.fileselect.setLayout(self.grid_layout)
 
-        self.from_url_button = QPushButton('Télécharger depuis le lien')
+        self.from_url_button = QPushButton('Télécharger depuis un lien')
         self.from_url_button.setFont(FONT)
         self.from_url_button.setFocusPolicy(Qt.NoFocus)
         self.from_url_button.clicked.connect(self.select_files_from_url)
@@ -353,7 +403,7 @@ class secondTab(QLabel):
         #self.main_layout.addWidget(QLabel(''), 1)  # padding
         self.displaying_results = False
         self.setLayout(self.main_layout)
-        self.file_to_analyse = cv2.imread('SAMPLES/01.jpeg')
+        self.file_to_analyse = cv2.imread('SAMPLES/00.jpeg')
         self.file_to_analyse_pixmap = self.convert_cv_qt(self.file_to_analyse)
         self.file_to_analyse_pixmap = self.file_to_analyse_pixmap.scaledToHeight(IMAGE_HEIGHT)
         self.image_ph.setPixmap(self.file_to_analyse_pixmap)
