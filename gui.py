@@ -1,11 +1,12 @@
 # Core imports
 import sys
 import os
+import cv2
 import urllib
 from urllib import request
 
 # Project imports
-from cnn import *
+#from cnn import *
 
 # 3rd parties imports
 from PyQt5.QtWidgets import *
@@ -14,7 +15,15 @@ from PyQt5.QtCore import *
 
 global FONT, DELAY_FADE,ELEMENT_BY_ELEMENT, IMAGE_HEIGHT, SCREEN_WIDTH, SCREEN_HEIGHT, WIDTH_PERCENTAGE
 ELEMENT_BY_ELEMENT = True
+def resource_path(relative_path):
+    """ Get absolute path to resource, works for dev and for PyInstaller """
+    try:
+        # PyInstaller creates a temp folder and stores path in _MEIPASS
+        base_path = sys._MEIPASS
+    except Exception:
+        base_path = os.path.abspath(".")
 
+    return os.path.join(base_path, relative_path)
 
 def pixel_to_pt(pixel):
     return int(pixel * 12 / 16)
@@ -114,7 +123,7 @@ class MainWindow(QWidget):
                                 'Vous réglez vos achats avec votre carte de fidélité.<br>'
                                 'Le magasin a donc accès à votre historique d’achats.</p>'),
              Padding(5),
-             QPixmap('ASSETS/SUPER_CARD.PNG')
+             QPixmap(resource_path('./ASSETS/SUPER_CARD.PNG'))
             ,
             Title('Que sait le magasin sur vous ?'),
             Text('<p style="line-height:'+str(line_height)+';">Le magasin sait quel shampooing vous venez d\'acheter.<br>'
@@ -133,7 +142,7 @@ class MainWindow(QWidget):
                   # 'Un simple achat peut en dire beaucoup sur vous</p>'
                  ),
             Padding(5),
-            QPixmap('ASSETS/LOGO2.png'),
+            QPixmap(resource_path('./ASSETS/LOGO2.png')),
             # QPixmap("ASSETS/MONEY.png"),
             Title("Pourquoi les entreprises veulent mes données ?"),
             Text('<p style="line-height:'+str(line_height)+';">Les entreprises gagnent de l\'argent avec vos informations personnelles<br>'
@@ -141,7 +150,7 @@ class MainWindow(QWidget):
                  'Une carte de fidélité nous fait économiser de l\'argent, mais en échange, nous payons avec nos informations personelles...<br>'
                  '... afin que les entreprises gagnent encore plus d\'argent !</p>'),
             Padding(5),
-            QPixmap("ASSETS/MONEY.png"),
+            QPixmap(resource_path("./ASSETS/MONEY.png")),
             Title("Comment est-ce possible ?"),
             Text('<p style="line-height:'+str(line_height)+';">Grâce à l\'historique d\'achats de ses 2 millions de clients quotidiens.<br>'
                  'Un humain ne peut pas analyser toutes ces données à la main. Un ordinateur, oui.<br>'
@@ -149,7 +158,7 @@ class MainWindow(QWidget):
                   'C\'est ce qui permet aux entreprises de transformer vos données en argent.</p>'),
 
 
-            QPixmap("ASSETS/COMPUTER.png"),
+            QPixmap(resource_path("./ASSETS/COMPUTER.png")),
             Title('Un réseau de neurones ? Essayez !'),
             Text('<p style="line-height:'+str(line_height)+';">Maintenant, vous allez analyser des photos avec un réseau de neurones. <br>'
                  #'Vous pouvez utiliser une image de votre ordinateur, ou le lien d\'une image sur internet<br>'
@@ -170,9 +179,7 @@ class MainWindow(QWidget):
               'Avec la publicité<br>'
              'notre profil est transmis à des entreprises qui payent Google pour nous afficher de la publicité.<br>'
                  'Google et Facebook ne sont pas des entreprises qui développent des logiciels, mais bien des entreprises de publicité<br>'
-                 'En 2021, le chiffre d\'affaires de Google a été de 257 milliards, 80% de ces revenus proviennent de la publicité</p>'),
-            Padding(5),
-            QPixmap("ASSETS/ADS.webp")
+                 'En 2021, le chiffre d\'affaires de Google a été de 257 milliards, 80% de ces revenus proviennent de la publicité</p>')
 
 
 
@@ -381,8 +388,9 @@ class secondTab(QLabel):
 
 
         self.labels_ph = QLabel()
-        self.labels_ph.setFont(FONT)
+        self.labels_ph.setFont(FONT_TITLE)
         self.labels_ph.setAlignment(Qt.AlignCenter)
+        self.labels_ph.setFixedHeight(50)
 
 
         self.fileselect.setFixedHeight(60)
@@ -396,7 +404,7 @@ class secondTab(QLabel):
         #self.main_layout.addWidget(QLabel(''), 1)  # padding
         self.displaying_results = False
         self.setLayout(self.main_layout)
-        self.file_to_analyse = cv2.imread('SAMPLES/00.jpeg')
+        self.file_to_analyse = cv2.imread(resource_path('SAMPLES/00.jpeg'))
         self.file_to_analyse_pixmap = self.convert_cv_qt(self.file_to_analyse)
         self.file_to_analyse_pixmap = self.file_to_analyse_pixmap.scaledToHeight(IMAGE_HEIGHT)
         self.image_ph.setPixmap(self.file_to_analyse_pixmap)
@@ -466,7 +474,7 @@ class secondTab(QLabel):
         self.message = QMessageBox()
         self.message.setWindowFlags(Qt.FramelessWindowHint)
         self.message.setIcon(QMessageBox.Information)
-        self.message.setText('Analysing')
+        self.message.setText('Analyse de la photo')
         self.message.show()
 
         QTimer.singleShot(100, self.handle_t)
@@ -517,6 +525,6 @@ if __name__ == "__main__":
 
     w1.setFocus()
 
-    app.setWindowIcon(QIcon('ASSETS/LOGO2.png'))
+    app.setWindowIcon(QIcon('./ASSETS/LOGO2.png'))
 
     sys.exit(app.exec_())
