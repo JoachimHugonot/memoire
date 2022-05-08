@@ -1,20 +1,22 @@
 # Core imports
 import sys
 import os
-import cv2
 import urllib
 from urllib import request
 
 # Project imports
-#from cnn import *
+from cnn import *
 
 # 3rd parties imports
 from PyQt5.QtWidgets import *
 from PyQt5.QtGui import *
 from PyQt5.QtCore import *
 
+
 global FONT, DELAY_FADE,ELEMENT_BY_ELEMENT, IMAGE_HEIGHT, SCREEN_WIDTH, SCREEN_HEIGHT, WIDTH_PERCENTAGE
 ELEMENT_BY_ELEMENT = True
+
+
 def resource_path(relative_path):
     """ Get absolute path to resource, works for dev and for PyInstaller """
     try:
@@ -36,7 +38,7 @@ FONT = QFont('Helvetica', pixel_to_pt(30))
 FONT_TITLE = QFont('Helvetica', pixel_to_pt(50))
 IMAGE_HEIGHT = 600
 WIDTH_PERCENTAGE = 0.95
-line_height = 1.5
+line_height = 150
 
 class Padding(QLabel):
     def __init__(self, height):
@@ -48,10 +50,9 @@ class Title(QLabel):
         super().__init__()
         self.setText(text)
         self.setFont(FONT_TITLE)
-        self.setFixedHeight(160)
-        self.setStyleSheet('margin-top: 100px; margin-bottom: 10px; color:lightBlue')
+        self.setFixedHeight(170)
+        self.setStyleSheet('margin-top: 100px; margin-bottom: 10px; color:darkBlue')
         self.setAlignment(Qt.AlignCenter)
-        print(int(WIDTH_PERCENTAGE * SCREEN_WIDTH))
         self.setFixedWidth(int(WIDTH_PERCENTAGE * SCREEN_WIDTH))
 
 
@@ -69,7 +70,7 @@ class Text(QLabel):
 
         n_lines = text.count('<br>') +  text.count('<ol>') + text.count('<ul>') + text.count('<li>') + 1
         print(n_lines)
-        self.setFixedHeight(30 * n_lines + pt_to_pixel(line_height) * (n_lines - 1))
+        self.setFixedHeight(50 * n_lines + pt_to_pixel(line_height)/100 * (n_lines - 1))
         self.setFixedWidth(int(WIDTH_PERCENTAGE * SCREEN_WIDTH))
         self.setAlignment(Qt.AlignCenter)
 
@@ -96,7 +97,7 @@ class MainWindow(QWidget):
         self.scroll.setWidgetResizable(True)
         self.scroll.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
         self.scroll.horizontalScrollBar().setEnabled(False)
-
+        self.scroll.setStyleSheet('background:lightgrey')
 
         layout = QVBoxLayout(self)
         layout.addWidget(self.scroll)
@@ -129,9 +130,9 @@ class MainWindow(QWidget):
             Text('<p style="line-height:'+str(line_height)+';">Le magasin sait quel shampooing vous venez d\'acheter.<br>'
 
                   "Est-ce que vous pensez que cette information personelle révèle beaucoup à votre sujet ?<br>"
-                  "<span style=\"color:green\">Non, pas du tout </span>  <br>"
-                  "<span style=\"color:orange\">Un peu, rien d'important</span>  <br>"
-                  "<span style=\"color:red\">Oui, beaucoup trop</span>  </p>"),
+                  "<span style=\"color:rgb(0,175,0)\">Non, pas du tout </span>  <br>"
+                  "<span style=\"color:rgb(175,127,0)\">Un peu, rien d'important</span>  <br>"
+                  "<span style=\"color:rgb(175,0,0)\">Oui, beaucoup trop</span>  </p>"),
 
             Title('Un simple achat peut en dire beaucoup sur vous !'),
             Text('<p style="line-height:'+str(line_height)+';">En 2012, un magasin a appris qu’une adolescente était enceinte avant que sa famille ne l\'apprenne.<br>'
@@ -167,21 +168,21 @@ class MainWindow(QWidget):
 
             secondTab(),
             Title("Et alors ?"),
-            Text('<p style="line-height:'+str(line_height)+';">TODO <br>'
-                 "Photo analysée + problématique<br>"
-                 "Sur le marché du travail dans quelques années<br>"
-                 "Navigation privée + nom/prénom<br>"
-                 "Les services que vous utilisez peuvent utiliser, vos informations. Optionellement lien prochaine partie </p>"
-                 ),
-            Title("Vos informations"),
-            Text('<p style="line-height:'+str(line_height)+';">Avez-vous déjà effectué une recherche sur un moteur de recherche et vu une publicité en rapport immédiatement après ?<br>'
-                 'Savez-vous comment Google (et Facebook) gagnent t-ils de l’argent ? <br>'
-              'Avec la publicité<br>'
-             'notre profil est transmis à des entreprises qui payent Google pour nous afficher de la publicité.<br>'
-                 'Google et Facebook ne sont pas des entreprises qui développent des logiciels, mais bien des entreprises de publicité<br>'
-                 'En 2021, le chiffre d\'affaires de Google a été de 257 milliards, 80% de ces revenus proviennent de la publicité</p>')
-
-
+            # Text('<p style="line-height:'+str(line_height)+';">TODO <br>'
+            #      "Photo analysée + problématique<br>"
+            #      "Sur le marché du travail dans quelques années<br>"
+            #      "Navigation privée + nom/prénom<br>"
+            #      "Les services que vous utilisez peuvent utiliser, vos informations. Optionellement lien prochaine partie </p>"
+            #      ),
+            # Title("Vos informations"),
+            # Text('<p style="line-height:'+str(line_height)+';">Avez-vous déjà effectué une recherche sur un moteur de recherche et vu une publicité en rapport immédiatement après ?<br>'
+            #      'Savez-vous comment Google (et Facebook) gagnent t-ils de l’argent ? <br>'
+            #   'Avec la publicité<br>'
+            #  'notre profil est transmis à des entreprises qui payent Google pour nous afficher de la publicité.<br>'
+            #      'Google et Facebook ne sont pas des entreprises qui développent des logiciels, mais bien des entreprises de publicité<br>'
+            #      'En 2021, le chiffre d\'affaires de Google a été de 257 milliards, 80% de ces revenus proviennent de la publicité</p>')
+            #
+            #
 
             #Text('Nos ordinateurs sont désormais capables d’analyser automatiquement les photos et les vidéos grâce à l’intelligence artificielle'),
             #Text('Qui a accès à vos photos/vidéos et à le droit de les utiliser afin d’en tirer des informations vous concernant ? Probablement tous les services que vous utilisez sur vos smartphones'),
@@ -371,6 +372,7 @@ class secondTab(QLabel):
         self.from_drive_button.setFixedWidth(int(SCREEN_WIDTH * WIDTH_PERCENTAGE / 3.0))
 
         self.from_url_edit.setFixedHeight(60)
+        self.from_url_edit.setStyleSheet('background:white')
         self.from_url_button.setFixedHeight(40)
 
 
@@ -404,7 +406,7 @@ class secondTab(QLabel):
         #self.main_layout.addWidget(QLabel(''), 1)  # padding
         self.displaying_results = False
         self.setLayout(self.main_layout)
-        self.file_to_analyse = cv2.imread(resource_path('SAMPLES/00.jpeg'))
+        self.file_to_analyse = cv2.imread(resource_path('SAMPLES/01.jpeg'))
         self.file_to_analyse_pixmap = self.convert_cv_qt(self.file_to_analyse)
         self.file_to_analyse_pixmap = self.file_to_analyse_pixmap.scaledToHeight(IMAGE_HEIGHT)
         self.image_ph.setPixmap(self.file_to_analyse_pixmap)
@@ -436,7 +438,7 @@ class secondTab(QLabel):
 
     def select_files(self):
         file, check = QFileDialog.getOpenFileName(None, "QFileDialog.getOpenFileName()",
-                                                  "", "Image Files (*.png *.jpg *.bmp *.jpeg)")
+                                                  "./SAMPLES", "Image Files (*.png *.jpg *.bmp *.jpeg)")
         if check:
             self.file_to_analyse = cv2.imread(file)
             self.file_to_analyse_pixmap = self.convert_cv_qt(self.file_to_analyse)
