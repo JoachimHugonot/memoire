@@ -70,7 +70,7 @@ class Text(QLabel):
 
         n_lines = text.count('<br>') +  text.count('<ol>') + text.count('<ul>') + text.count('<li>') + 1
         print(n_lines)
-        self.setFixedHeight(50 * n_lines + pt_to_pixel(line_height)/100 * (n_lines - 1))
+        self.setFixedHeight(int(50 * n_lines + pt_to_pixel(line_height)/100 * (n_lines - 1)))
         self.setFixedWidth(int(WIDTH_PERCENTAGE * SCREEN_WIDTH))
         self.setAlignment(Qt.AlignCenter)
 
