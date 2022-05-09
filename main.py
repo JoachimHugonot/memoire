@@ -31,6 +31,7 @@ class Padding(QLabel):
 class Title(QLabel):
     def __init__(self, text):
         super().__init__()
+
         self.setText(text)
         self.setFont(FONT_TITLE)
         self.setFixedHeight(170)
@@ -92,7 +93,7 @@ class MainWindow(QWidget):
 
             #   QPixmap('ASSETS/SUPER_CARD.PNG')]
             # ,
-            Title('Que disent mes données sur moi ?'),
+            Title('1 - Que disent mes données sur moi ?'),
             # QPixmap('ASSETS/LOGO2.png'),
             # QPixmap('ASSETS/COOP.jpg'),
 
@@ -103,7 +104,7 @@ class MainWindow(QWidget):
             Padding(5),
             QPixmap(resource_path('./ASSETS/LOYALTY_CARD.png'))
             ,
-            Title('Que sait le magasin sur vous ?'),
+            Title('2 - Que sait le magasin sur vous ?'),
             Text('<p style="line-height:' + str(
                 CONFIG['LINE_HEIGHT']) + ';">Le magasin sait quel shampooing vous venez d\'acheter.<br>'
 
@@ -112,7 +113,7 @@ class MainWindow(QWidget):
                                "<span style=\"color:rgb(175,127,0)\">Un peu, rien d'important</span>  <br>"
                                "<span style=\"color:rgb(175,0,0)\">Oui, beaucoup trop</span>  </p>"),
 
-            Title('Un simple achat peut en dire beaucoup sur vous !'),
+            Title('3 - Un simple achat peut en dire beaucoup sur vous !'),
             Text('<p style="line-height:' + str(
                 CONFIG['LINE_HEIGHT']) + ';">En 2012, un magasin a appris qu’une adolescente était enceinte avant que sa famille ne l\'apprenne.<br>'
                                'Elle a juste acheté un shampooing sans parfum et le magasin en a déduit qu\'elle était enceinte.<br>'
@@ -124,7 +125,7 @@ class MainWindow(QWidget):
             Padding(5),
             QPixmap(resource_path('./ASSETS/SHAMPOO.png')),
             # QPixmap("ASSETS/MONEY.png"),
-            Title("Pourquoi les entreprises veulent mes données ?"),
+            Title("4 - Pourquoi les entreprises veulent mes données ?"),
             Text('<p style="line-height:' + str(
                 CONFIG['LINE_HEIGHT']) + ';">Les entreprises gagnent de l\'argent avec vos informations personnelles<br>'
                                'Le magasin les a utilisées pour personnaliser la publicité envoyée à l\'adolescente : des couches et des berceaux.<br>'
@@ -132,7 +133,7 @@ class MainWindow(QWidget):
                                '... afin que les entreprises gagnent encore plus d\'argent !</p>'),
             Padding(5),
             QPixmap(resource_path("./ASSETS/MONEY.png")),
-            Title("Comment est-ce possible ?"),
+            Title("5 - Comment est-ce possible ?"),
             Text('<p style="line-height:' + str(
                 CONFIG['LINE_HEIGHT']) + ';">Grâce à l\'historique d\'achats de ses 2 millions de clients quotidiens.<br>'
                                'Un humain ne peut pas analyser toutes ces données à la main. Un ordinateur, oui.<br>'
@@ -140,14 +141,14 @@ class MainWindow(QWidget):
                                'C\'est ce qui permet aux entreprises de transformer vos données en argent.</p>'),
 
             QPixmap(resource_path("./ASSETS/COMPUTER.png")),
-            Title('Un réseau de neurones ? Essayez !'),
+            Title('6 - Un réseau de neurones ? Essayez !'),
             Text('<p style="line-height:' + str(
                 CONFIG['LINE_HEIGHT']) + ';">Maintenant, vous allez analyser des photos avec un réseau de neurones. <br>'
                  # 'Vous pouvez utiliser une image de votre ordinateur, ou le lien d\'une image sur internet<br>'
                                'N\'hésitez pas à analyser vos photos personelles : nous garantissons que nous ne gardons aucune image.</p>'),
 
             secondTab(),
-            Title("Et alors ?"),
+            Title("7 - Et alors ?"),
             # Text('<p style="line-height:'+str(line_height)+';">TODO <br>'
             #      "Photo analysée + problématique<br>"
             #      "Sur le marché du travail dans quelques années<br>"
@@ -461,7 +462,7 @@ if __name__ == "__main__":
     app = QApplication(sys.argv)
     SCREEN_WIDTH = app.primaryScreen().size().width()
     SCREEN_HEIGHT = app.primaryScreen().size().height()
-    global window, w1
+
     window = QWidget()
     w1 = MainWindow()
     layout = QGridLayout(window)
