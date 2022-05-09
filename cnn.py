@@ -156,8 +156,10 @@ def colour_mask(image, color):
 
 def instance_segmentation_api(img, threshold=0.5, rect_th=3, text_size=3, text_th=3):
 
-
-    h, w, _ = img.shape
+    if len(img.shape) == 3:
+        h, w, _ = img.shape
+    elif len(img.shape) == 2:
+        h, w = img.shape
     ratio = h / 600
     new_h = int(h / ratio)
     new_w = int(w / ratio)
