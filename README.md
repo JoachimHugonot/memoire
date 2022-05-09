@@ -2,7 +2,7 @@
 - installation procedure
 
 # Ideas
-- imers to unlock the next part ?
+- Timers to unlock the next part ?
 
 # Meeting 28.04
 - Highlight the important terms
