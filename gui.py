@@ -6,6 +6,7 @@ from urllib import request
 
 # Project imports
 from cnn import *
+from utils import pt_to_pixel, pixel_to_pt, resource_path
 
 # 3rd parties imports
 from PyQt5.QtWidgets import *
@@ -17,22 +18,7 @@ global FONT, DELAY_FADE,ELEMENT_BY_ELEMENT, IMAGE_HEIGHT, SCREEN_WIDTH, SCREEN_H
 ELEMENT_BY_ELEMENT = True
 
 
-def resource_path(relative_path):
-    """ Get absolute path to resource, works for dev and for PyInstaller """
-    try:
-        # PyInstaller creates a temp folder and stores path in _MEIPASS
-        base_path = sys._MEIPASS
-    except Exception:
-        base_path = os.path.abspath(".")
 
-    return os.path.join(base_path, relative_path)
-
-def pixel_to_pt(pixel):
-    return int(pixel * 12 / 16)
-
-
-def pt_to_pixel(pt):
-    return int(pt * 16 / 12)
 
 FONT = QFont('Helvetica', pixel_to_pt(30))
 FONT_TITLE = QFont('Helvetica', pixel_to_pt(50))
