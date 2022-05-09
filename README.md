@@ -1,6 +1,3 @@
-# Todo
-- installation procedure
-
 # Ideas
 - Timers to unlock the next part ?
 
@@ -13,4 +10,10 @@
 - 3 sample images, cat, cat+bottle and person
 
 # Procedure
-- pyinstaller gui.spec
+### Requirement
+- Python3
+- pip
+### Setup of the environment
+"**pip install opencv-python PyQt5 torch torchvision pyinstaller**"
+### How to launch the code
+"**python main.py**"
