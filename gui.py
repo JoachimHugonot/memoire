@@ -306,7 +306,7 @@ class secondTab(QLabel):
         self.from_analyse_button.setFocusPolicy(Qt.NoFocus)
         self.from_analyse_button.clicked.connect(self.analyse)
 
-        self.show_hide_button = QPushButton('Montrer / Cacher les résultats')
+        self.show_hide_button = QPushButton('Voir l\'image')
         self.show_hide_button.setFont(FONT)
         self.show_hide_button.setFocusPolicy(Qt.NoFocus)
         self.show_hide_button.clicked.connect(self.show_hide)
@@ -369,6 +369,7 @@ class secondTab(QLabel):
         if self.displaying_results:
             self.displaying_results = False
             self.image_ph.setPixmap(self.file_to_analyse_pixmap)
+            self.show_hide_button.setText('Voir les résultats')
 
         else:
             self.displaying_results = True
@@ -391,6 +392,7 @@ class secondTab(QLabel):
             self.labels_ph.setText(labels)
             self.setWordWrap(True)
             self.labels_ph.setFixedHeight(60)
+            self.show_hide_button.setText('Voir l\'image')
 
     def select_files(self):
         file, check = QFileDialog.getOpenFileName(None, "QFileDialog.getOpenFileName()",
