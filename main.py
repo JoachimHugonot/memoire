@@ -101,7 +101,7 @@ class MainWindow(QWidget):
                                'Vous réglez vos achats avec votre carte de fidélité.<br>'
                                'Le magasin a donc accès à votre historique d’achats.</p>'),
             Padding(5),
-            QPixmap(resource_path('./ASSETS/SUPER_CARD.PNG'))
+            QPixmap(resource_path('./ASSETS/LOYALTY_CARD.png'))
             ,
             Title('Que sait le magasin sur vous ?'),
             Text('<p style="line-height:' + str(
@@ -122,7 +122,7 @@ class MainWindow(QWidget):
                  # 'Un simple achat peut en dire beaucoup sur vous</p>'
                  ),
             Padding(5),
-            QPixmap(resource_path('./ASSETS/LOGO2.png')),
+            QPixmap(resource_path('./ASSETS/SHAMPOO.png')),
             # QPixmap("ASSETS/MONEY.png"),
             Title("Pourquoi les entreprises veulent mes données ?"),
             Text('<p style="line-height:' + str(
@@ -468,5 +468,5 @@ if __name__ == "__main__":
     layout.addWidget(w1, 0, 0, 1, 3)
     window.showMaximized()
     w1.setFocus()
-    app.setWindowIcon(QIcon('./ASSETS/LOGO2.png'))
+    app.setWindowIcon(QIcon('./ASSETS/SHAMPOO.png'))
     sys.exit(app.exec_())
