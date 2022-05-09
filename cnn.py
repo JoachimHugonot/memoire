@@ -129,7 +129,9 @@ def get_prediction(img, threshold):
     img = transform(img)
     pred = model([img])
     pred_score = list(pred[0]['scores'].detach().numpy())
-    pred_t = [pred_score.index(x) for x in pred_score if x>threshold][-1]
+    if len([pred_score.index(x) for x in pred_score if x > threshold]) == 0:
+        return [], [], []
+    pred_t = [pred_score.index(x) for x in pred_score if x > threshold][-1]
     masks = (pred[0]['masks']>0.5).squeeze().detach().cpu().numpy()
     pred_class = [COCO_INSTANCE_CATEGORY_NAMES[i] for i in list(pred[0]['labels'].numpy())]
     pred_boxes = [[(i[0], i[1]), (i[2], i[3])] for i in list(pred[0]['boxes'].detach().numpy())]

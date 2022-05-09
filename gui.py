@@ -422,6 +422,10 @@ class secondTab(QLabel):
 
             labels = []
 
+            if self.SEEN == []:
+                self.SEEN.append('L\'algorithme n\'a rien trouvé !')
+                self.COLORS.append([0, 0, 0])
+
             for a in zip(self.SEEN, self.COLORS):
                 lab, col = a
                 col = [col[2], col[1], col[0]]
