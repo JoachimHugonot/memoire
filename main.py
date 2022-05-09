@@ -100,7 +100,7 @@ class MainWindow(QWidget):
             # QPixmap('ASSETS/COOP.jpg'),
 
             Text('<p style="line-height:' + str(
-                CONFIG['LINE_HEIGHT']) + ';">Vous êtes en train d\'acheter un shampooing.<br>'
+                CONFIG['LINE_HEIGHT']) + ';">Vous êtes en train d\'acheter un shampoing.<br>'
                                'Vous réglez vos achats avec votre carte de fidélité.<br>'
                                'Le magasin a donc accès à votre historique d’achats.</p>'),
             Padding(5),
@@ -108,7 +108,7 @@ class MainWindow(QWidget):
             ,
             Title('2 - Que sait le magasin sur vous ?'),
             Text('<p style="line-height:' + str(
-                CONFIG['LINE_HEIGHT']) + ';">Le magasin sait quel shampooing vous venez d\'acheter.<br>'
+                CONFIG['LINE_HEIGHT']) + ';">Le magasin sait quel shampoing vous venez d\'acheter.<br>'
 
                                "Est-ce que vous pensez que cette information personelle révèle beaucoup à votre sujet ?<br>"
                                "<span style=\"color:rgb(0,175,0)\">Non, pas du tout </span>  <br>"
@@ -118,7 +118,7 @@ class MainWindow(QWidget):
             Title('3 - Un simple achat peut en dire beaucoup sur vous !'),
             Text('<p style="line-height:' + str(
                 CONFIG['LINE_HEIGHT']) + ';">En 2012, un magasin a appris qu’une adolescente était enceinte avant que sa famille ne l\'apprenne.<br>'
-                               'Elle a juste acheté un shampooing sans parfum et le magasin en a déduit qu\'elle était enceinte.<br>'
+                               'Elle a juste acheté un shampoing sans parfum et le magasin en a déduit qu\'elle était enceinte.<br>'
                                'En effet, les femmes enceintes préfèrent acheter des produits sans parfum.<br>'
                  # 'L\'adolescente qui achetait des produits très parfumé a subitement commencé à acheter des produits aux parfums neutres.<br>'
                                '<a href=\"https://ladigitale.dev/digiread/#/a/6262819b4f474\">Je veux en savoir plus</a><br>'
@@ -262,7 +262,7 @@ class MainWindow(QWidget):
         event.accept()
 
     def keyPressEvent(self, event):
-
+        modifiers = QApplication.keyboardModifiers()
         if Qt.Key_N == event.key():
 
             for idx, el in enumerate(self.ELEMENTS):
@@ -274,6 +274,8 @@ class MainWindow(QWidget):
                         break
             # self.vsb.setValue(self.vsb.maximum() + 200)
             QTimer.singleShot(100, self.handle_timeout)
+        if Qt.Key_W == event.key() and modifiers == Qt.ControlModifier:
+            sys.exit()
 
     def handle_timeout(self):
         x = self.vsb.maximum()
