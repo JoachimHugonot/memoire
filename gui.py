@@ -1,6 +1,5 @@
 # Core imports
 import sys
-import os
 import urllib
 from urllib import request
 
@@ -13,12 +12,8 @@ from PyQt5.QtWidgets import *
 from PyQt5.QtGui import *
 from PyQt5.QtCore import *
 
-
-global FONT, DELAY_FADE,ELEMENT_BY_ELEMENT, IMAGE_HEIGHT, SCREEN_WIDTH, SCREEN_HEIGHT, WIDTH_PERCENTAGE
+global FONT, DELAY_FADE, ELEMENT_BY_ELEMENT, IMAGE_HEIGHT, SCREEN_WIDTH, SCREEN_HEIGHT, WIDTH_PERCENTAGE
 ELEMENT_BY_ELEMENT = True
-
-
-
 
 FONT = QFont('Helvetica', pixel_to_pt(30))
 FONT_TITLE = QFont('Helvetica', pixel_to_pt(50))
@@ -26,10 +21,12 @@ IMAGE_HEIGHT = 600
 WIDTH_PERCENTAGE = 0.95
 line_height = 150
 
+
 class Padding(QLabel):
     def __init__(self, height):
         super().__init__()
         self.setFixedHeight(height)
+
 
 class Title(QLabel):
     def __init__(self, text):
@@ -42,29 +39,23 @@ class Title(QLabel):
         self.setFixedWidth(int(WIDTH_PERCENTAGE * SCREEN_WIDTH))
 
 
-
 class Text(QLabel):
     def __init__(self, text):
         super().__init__()
 
-
         self.setText(text)
-        #self.setStyleSheet('background:grey')
 
         self.setFont(FONT)
         self.setWordWrap(True)
 
-        n_lines = text.count('<br>') +  text.count('<ol>') + text.count('<ul>') + text.count('<li>') + 1
-        print(n_lines)
-        self.setFixedHeight(int(50 * n_lines + pt_to_pixel(line_height)/100 * (n_lines - 1)))
+        n_lines = text.count('<br>') + text.count('<ol>') + text.count('<ul>') + text.count('<li>') + 1
+        self.setFixedHeight(int(50 * n_lines + pt_to_pixel(line_height) / 100 * (n_lines - 1)))
         self.setFixedWidth(int(WIDTH_PERCENTAGE * SCREEN_WIDTH))
         self.setAlignment(Qt.AlignCenter)
-
 
         self.setTextFormat(Qt.RichText)
         self.setTextInteractionFlags(Qt.TextBrowserInteraction)
         self.setOpenExternalLinks(True)
-
 
 
 class MainWindow(QWidget):
@@ -91,8 +82,8 @@ class MainWindow(QWidget):
         # Creation of the elements
         self.layout = QVBoxLayout()
         WIDGETS_ONE = [
-            #[Title('Que peuvent révéler mes données ?'),
-            #QPixmap('ASSETS/LOGO2.png'),
+            # [Title('Que peuvent révéler mes données ?'),
+            # QPixmap('ASSETS/LOGO2.png'),
             # QPixmap('ASSETS/COOP.jpg'),
 
             #   Text('<p style="line-height:'+str(line_height)+';">Imaginez vous en train d\'acheter un produit de beauté à la Coop.<br>'
@@ -100,57 +91,60 @@ class MainWindow(QWidget):
             #    'Le magasin a donc accès à votre historique d’achats.</p>'),
 
             #   QPixmap('ASSETS/SUPER_CARD.PNG')]
-            #,
+            # ,
             Title('Que disent mes données sur moi ?'),
-             # QPixmap('ASSETS/LOGO2.png'),
-             # QPixmap('ASSETS/COOP.jpg'),
+            # QPixmap('ASSETS/LOGO2.png'),
+            # QPixmap('ASSETS/COOP.jpg'),
 
-             Text('<p style="line-height:' + str(
-                 line_height) + ';">Vous êtes en train d\'acheter un shampooing.<br>'
-                                'Vous réglez vos achats avec votre carte de fidélité.<br>'
-                                'Le magasin a donc accès à votre historique d’achats.</p>'),
-             Padding(5),
-             QPixmap(resource_path('./ASSETS/SUPER_CARD.PNG'))
+            Text('<p style="line-height:' + str(
+                line_height) + ';">Vous êtes en train d\'acheter un shampooing.<br>'
+                               'Vous réglez vos achats avec votre carte de fidélité.<br>'
+                               'Le magasin a donc accès à votre historique d’achats.</p>'),
+            Padding(5),
+            QPixmap(resource_path('./ASSETS/SUPER_CARD.PNG'))
             ,
             Title('Que sait le magasin sur vous ?'),
-            Text('<p style="line-height:'+str(line_height)+';">Le magasin sait quel shampooing vous venez d\'acheter.<br>'
+            Text('<p style="line-height:' + str(
+                line_height) + ';">Le magasin sait quel shampooing vous venez d\'acheter.<br>'
 
-                  "Est-ce que vous pensez que cette information personelle révèle beaucoup à votre sujet ?<br>"
-                  "<span style=\"color:rgb(0,175,0)\">Non, pas du tout </span>  <br>"
-                  "<span style=\"color:rgb(175,127,0)\">Un peu, rien d'important</span>  <br>"
-                  "<span style=\"color:rgb(175,0,0)\">Oui, beaucoup trop</span>  </p>"),
+                               "Est-ce que vous pensez que cette information personelle révèle beaucoup à votre sujet ?<br>"
+                               "<span style=\"color:rgb(0,175,0)\">Non, pas du tout </span>  <br>"
+                               "<span style=\"color:rgb(175,127,0)\">Un peu, rien d'important</span>  <br>"
+                               "<span style=\"color:rgb(175,0,0)\">Oui, beaucoup trop</span>  </p>"),
 
             Title('Un simple achat peut en dire beaucoup sur vous !'),
-            Text('<p style="line-height:'+str(line_height)+';">En 2012, un magasin a appris qu’une adolescente était enceinte avant que sa famille ne l\'apprenne.<br>'
-                 'Elle a juste acheté un shampooing sans parfum et le magasin en a déduit qu\'elle était enceinte.<br>'
-                 'En effet, les femmes enceintes préfèrent acheter des produits sans parfum.<br>'
-                 #'L\'adolescente qui achetait des produits très parfumé a subitement commencé à acheter des produits aux parfums neutres.<br>'
-                 '<a href=\"https://ladigitale.dev/digiread/#/a/6262819b4f474\">Je veux en savoir plus</a><br>'
-                  # 'Un simple achat peut en dire beaucoup sur vous</p>'
+            Text('<p style="line-height:' + str(
+                line_height) + ';">En 2012, un magasin a appris qu’une adolescente était enceinte avant que sa famille ne l\'apprenne.<br>'
+                               'Elle a juste acheté un shampooing sans parfum et le magasin en a déduit qu\'elle était enceinte.<br>'
+                               'En effet, les femmes enceintes préfèrent acheter des produits sans parfum.<br>'
+                 # 'L\'adolescente qui achetait des produits très parfumé a subitement commencé à acheter des produits aux parfums neutres.<br>'
+                               '<a href=\"https://ladigitale.dev/digiread/#/a/6262819b4f474\">Je veux en savoir plus</a><br>'
+                 # 'Un simple achat peut en dire beaucoup sur vous</p>'
                  ),
             Padding(5),
             QPixmap(resource_path('./ASSETS/LOGO2.png')),
             # QPixmap("ASSETS/MONEY.png"),
             Title("Pourquoi les entreprises veulent mes données ?"),
-            Text('<p style="line-height:'+str(line_height)+';">Les entreprises gagnent de l\'argent avec vos informations personnelles<br>'
-                 'Le magasin les a utilisées pour personnaliser la publicité envoyée à l\'adolescente : des couches et des berceaux.<br>'
-                 'Une carte de fidélité nous fait économiser de l\'argent, mais en échange, nous payons avec nos informations personelles...<br>'
-                 '... afin que les entreprises gagnent encore plus d\'argent !</p>'),
+            Text('<p style="line-height:' + str(
+                line_height) + ';">Les entreprises gagnent de l\'argent avec vos informations personnelles<br>'
+                               'Le magasin les a utilisées pour personnaliser la publicité envoyée à l\'adolescente : des couches et des berceaux.<br>'
+                               'Une carte de fidélité nous fait économiser de l\'argent, mais en échange, nous payons avec nos informations personelles...<br>'
+                               '... afin que les entreprises gagnent encore plus d\'argent !</p>'),
             Padding(5),
             QPixmap(resource_path("./ASSETS/MONEY.png")),
             Title("Comment est-ce possible ?"),
-            Text('<p style="line-height:'+str(line_height)+';">Grâce à l\'historique d\'achats de ses 2 millions de clients quotidiens.<br>'
-                 'Un humain ne peut pas analyser toutes ces données à la main. Un ordinateur, oui.<br>'
-                  'Avez-vous déjà entendu parler d\'intelligence artificielle, de réseaux de neurones ou de deep learning ? <br>'
-                  'C\'est ce qui permet aux entreprises de transformer vos données en argent.</p>'),
-
+            Text('<p style="line-height:' + str(
+                line_height) + ';">Grâce à l\'historique d\'achats de ses 2 millions de clients quotidiens.<br>'
+                               'Un humain ne peut pas analyser toutes ces données à la main. Un ordinateur, oui.<br>'
+                               'Avez-vous déjà entendu parler d\'intelligence artificielle, de réseaux de neurones ou de deep learning ? <br>'
+                               'C\'est ce qui permet aux entreprises de transformer vos données en argent.</p>'),
 
             QPixmap(resource_path("./ASSETS/COMPUTER.png")),
             Title('Un réseau de neurones ? Essayez !'),
-            Text('<p style="line-height:'+str(line_height)+';">Maintenant, vous allez analyser des photos avec un réseau de neurones. <br>'
-                 #'Vous pouvez utiliser une image de votre ordinateur, ou le lien d\'une image sur internet<br>'
-                 'N\'hésitez pas à analyser vos photos personelles : nous garantissons que nous ne gardons aucune image.</p>'),
-
+            Text('<p style="line-height:' + str(
+                line_height) + ';">Maintenant, vous allez analyser des photos avec un réseau de neurones. <br>'
+                 # 'Vous pouvez utiliser une image de votre ordinateur, ou le lien d\'une image sur internet<br>'
+                               'N\'hésitez pas à analyser vos photos personelles : nous garantissons que nous ne gardons aucune image.</p>'),
 
             secondTab(),
             Title("Et alors ?"),
@@ -170,25 +164,23 @@ class MainWindow(QWidget):
             #
             #
 
-            #Text('Nos ordinateurs sont désormais capables d’analyser automatiquement les photos et les vidéos grâce à l’intelligence artificielle'),
-            #Text('Qui a accès à vos photos/vidéos et à le droit de les utiliser afin d’en tirer des informations vous concernant ? Probablement tous les services que vous utilisez sur vos smartphones'),
-            #Text('Un simple achat d’un produit de beauté peut permettre à un inconnu de savoir si vous êtes enceinte.'),
+            # Text('Nos ordinateurs sont désormais capables d’analyser automatiquement les photos et les vidéos grâce à l’intelligence artificielle'),
+            # Text('Qui a accès à vos photos/vidéos et à le droit de les utiliser afin d’en tirer des informations vous concernant ? Probablement tous les services que vous utilisez sur vos smartphones'),
+            # Text('Un simple achat d’un produit de beauté peut permettre à un inconnu de savoir si vous êtes enceinte.'),
 
-            #Text("Maintenant imaginez ce que les géants du domaine (Google et Facebook) savent sur vous. "),
-            #Text("La gratuité de votre expérience sur vos smartphones à un coût"),
+            # Text("Maintenant imaginez ce que les géants du domaine (Google et Facebook) savent sur vous. "),
+            # Text("La gratuité de votre expérience sur vos smartphones à un coût"),
 
-            #QLabel("Ces algorithmes peuvent analyser une très grande quantité de données afin d’en tirer des informations précieuses"),
-            #QLabel("Ces algorithmes peuvent analyser une très grande quantité de données afin d’en tirer des informations précieuses"),
+            # QLabel("Ces algorithmes peuvent analyser une très grande quantité de données afin d’en tirer des informations précieuses"),
+            # QLabel("Ces algorithmes peuvent analyser une très grande quantité de données afin d’en tirer des informations précieuses"),
 
         ]
         for widget in WIDGETS_ONE:
             if type(widget) == Text or type(widget) == Title:
-                #widget.setWordWrap(False)
-                #widget.setAlignment(Qt.AlignCenter)
+                # widget.setWordWrap(False)
+                # widget.setAlignment(Qt.AlignCenter)
                 self.ELEMENTS.append(widget)
-                print(widget.text())
                 formLayout.addWidget(widget, alignment=Qt.AlignCenter)
-
 
             elif type(widget) == QPixmap:
                 image_ph = QLabel()
@@ -196,7 +188,6 @@ class MainWindow(QWidget):
                 image_ph.setPixmap(widget)
                 self.ELEMENTS.append(image_ph)
                 formLayout.addWidget(image_ph, alignment=Qt.AlignCenter)
-
 
             elif type(widget) == QSlider:
                 widget.setMinimum(1)
@@ -215,7 +206,7 @@ class MainWindow(QWidget):
             elif type(widget) == Padding:
                 # widget.setWordWrap(True)
                 widget.setFont(FONT)
-                #widget.setFixedHeight(50)
+                # widget.setFixedHeight(50)
                 # widget.setFixedWidth(1600)
 
                 widget.setWordWrap(True)
@@ -251,34 +242,17 @@ class MainWindow(QWidget):
                 text.setFixedWidth(int(SCREEN_WIDTH * 0.75))
                 image = image.scaledToWidth(int(SCREEN_WIDTH * 0.20))
 
-               # sys.exit()
-
-                #layout = QHBoxLayout()
-                #pane.setLayout(layout)
-                #widget[0].setStyleSheet('background:grey;')
                 image_ph = QLabel()
-                #widget[2] = widget[2].scaledToHeight(200)
                 image_ph.setPixmap(image)
 
                 sublay.addWidget(image_ph)
 
-                #layout.addWidget(widget[0])
-                #layout.addWidget(image_ph)
-
-
-                #pane.setFixedWidth(widget[0].width() +image_ph.width())
-                #pane.setFixedHeight(max(widget[0].height(), image_ph.height()))
                 self.ELEMENTS.append(pane)
                 formLayout.addWidget(pane, alignment=Qt.AlignCenter)
-
-
-
         for el in self.ELEMENTS:
-            if ELEMENT_BY_ELEMENT :
+            if ELEMENT_BY_ELEMENT:
                 el.hide()
-        #formLayout.addWidget(Padding(900))
-        #formLayout.setSpacing(0)
-        formLayout.setContentsMargins(0,0,0,0)
+        formLayout.setContentsMargins(0, 0, 0, 0)
         formLayout.setSizeConstraint(QLayout.SetFixedSize)
 
     def mousePressEvent(self, event):
@@ -293,16 +267,14 @@ class MainWindow(QWidget):
 
                     el.show()
 
-                    if idx != len(self.ELEMENTS) - 1 and type(self.ELEMENTS[idx+1])  in [Title] :
+                    if idx != len(self.ELEMENTS) - 1 and type(self.ELEMENTS[idx + 1]) in [Title]:
                         break
-            #self.vsb.setValue(self.vsb.maximum() + 200)
+            # self.vsb.setValue(self.vsb.maximum() + 200)
             QTimer.singleShot(100, self.handle_timeout)
-            print(self.ELEMENTS[-1].pos().x())
 
     def handle_timeout(self):
         x = self.vsb.maximum()
-        print(x)
-        self.vsb.setValue(x+200)
+        self.vsb.setValue(x + 200)
 
 
 class secondTab(QLabel):
@@ -361,7 +333,6 @@ class secondTab(QLabel):
         self.from_url_edit.setStyleSheet('background:white')
         self.from_url_button.setFixedHeight(40)
 
-
         self.from_drive_button.setFixedHeight(40)
 
         self.grid_layout.setSizeConstraint(QLayout.SetFixedSize)
@@ -373,13 +344,10 @@ class secondTab(QLabel):
         self.image_ph = QLabel()
         self.image_ph.setFixedHeight(600)
 
-
-
         self.labels_ph = QLabel()
         self.labels_ph.setFont(FONT_TITLE)
         self.labels_ph.setAlignment(Qt.AlignCenter)
         self.labels_ph.setFixedHeight(50)
-
 
         self.fileselect.setFixedHeight(60)
         self.main_layout.setSizeConstraint(QLayout.SetFixedSize)
@@ -389,7 +357,7 @@ class secondTab(QLabel):
         self.main_layout.addWidget(self.labels_ph, 1)  # padding
         self.main_layout.addWidget(self.from_analyse_button, 1)  # padding
         self.main_layout.addWidget(self.show_hide_button, 1)  # padding
-        #self.main_layout.addWidget(QLabel(''), 1)  # padding
+        # self.main_layout.addWidget(QLabel(''), 1)  # padding
         self.displaying_results = False
         self.setLayout(self.main_layout)
         self.file_to_analyse = cv2.imread(resource_path('SAMPLES/01.jpeg'))
@@ -416,11 +384,9 @@ class secondTab(QLabel):
                 lab, col = a
                 col = [col[2], col[1], col[0]]
                 color_s = 'rgb' + str(tuple(col))
-                s = '<span style ="color:'+color_s+'"> ' + lab + '</span>'
-                print(s)
+                s = '<span style ="color:' + color_s + '"> ' + lab + '</span>'
                 labels.append(s)
             labels = ' '.join(labels)
-            print(labels)
 
             self.labels_ph.setText(labels)
             self.setWordWrap(True)
@@ -434,7 +400,6 @@ class secondTab(QLabel):
             self.file_to_analyse_pixmap = self.convert_cv_qt(self.file_to_analyse)
             self.file_to_analyse_pixmap = self.file_to_analyse_pixmap.scaledToHeight(IMAGE_HEIGHT)
             self.image_ph.setPixmap(self.file_to_analyse_pixmap)
-
 
             self.displaying_results = False
             self.labels_ph.setText('')
@@ -456,11 +421,8 @@ class secondTab(QLabel):
         self.file_analysed_pixmap = self.file_analysed_pixmap.scaledToHeight(IMAGE_HEIGHT)
         self.show_hide()
 
-
         self.show_hide_button.setEnabled(True)
         self.message.close()
-
-
 
     def analyse(self):
         self.message = QMessageBox()
@@ -470,9 +432,6 @@ class secondTab(QLabel):
         self.message.show()
 
         QTimer.singleShot(100, self.handle_t)
-
-
-
 
     def select_files_from_url(self):
 
@@ -497,26 +456,15 @@ class secondTab(QLabel):
 
 
 if __name__ == "__main__":
-
     app = QApplication(sys.argv)
     SCREEN_WIDTH = app.primaryScreen().size().width()
     SCREEN_HEIGHT = app.primaryScreen().size().height()
-
     global window, w1
     window = QWidget()
-    #window.resize(1500, 750)
-
     w1 = MainWindow()
-
-
     layout = QGridLayout(window)
     layout.addWidget(w1, 0, 0, 1, 3)
-    #layout.addWidget(page1Button, 1, 0)
-
     window.showMaximized()
-
     w1.setFocus()
-
     app.setWindowIcon(QIcon('./ASSETS/LOGO2.png'))
-
     sys.exit(app.exec_())
