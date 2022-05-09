@@ -2,6 +2,7 @@
 import sys
 import urllib
 from urllib import request
+import json
 
 # Project imports
 from cnn import *
@@ -12,14 +13,13 @@ from PyQt5.QtWidgets import *
 from PyQt5.QtGui import *
 from PyQt5.QtCore import *
 
+CONFIG = json.load(open('config.json'))
 global FONT, DELAY_FADE, ELEMENT_BY_ELEMENT, IMAGE_HEIGHT, SCREEN_WIDTH, SCREEN_HEIGHT, WIDTH_PERCENTAGE
 ELEMENT_BY_ELEMENT = True
 
-FONT = QFont('Helvetica', pixel_to_pt(30))
-FONT_TITLE = QFont('Helvetica', pixel_to_pt(50))
-IMAGE_HEIGHT = 600
-WIDTH_PERCENTAGE = 0.95
-line_height = 150
+FONT = QFont('Helvetica', pixel_to_pt(CONFIG['TEXT_SIZE']))
+FONT_TITLE = QFont('Helvetica', pixel_to_pt(CONFIG['TITLE_SIZE']))
+
 
 
 class Padding(QLabel):
@@ -36,7 +36,7 @@ class Title(QLabel):
         self.setFixedHeight(170)
         self.setStyleSheet('margin-top: 100px; margin-bottom: 10px; color:darkBlue')
         self.setAlignment(Qt.AlignCenter)
-        self.setFixedWidth(int(WIDTH_PERCENTAGE * SCREEN_WIDTH))
+        self.setFixedWidth(int(CONFIG['WIDTH_PERCENTAGE'] * SCREEN_WIDTH))
 
 
 class Text(QLabel):
@@ -49,8 +49,8 @@ class Text(QLabel):
         self.setWordWrap(True)
 
         n_lines = text.count('<br>') + text.count('<ol>') + text.count('<ul>') + text.count('<li>') + 1
-        self.setFixedHeight(int(50 * n_lines + pt_to_pixel(line_height) / 100 * (n_lines - 1)))
-        self.setFixedWidth(int(WIDTH_PERCENTAGE * SCREEN_WIDTH))
+        self.setFixedHeight(int(50 * n_lines + pt_to_pixel(CONFIG['LINE_HEIGHT']) / 100 * (n_lines - 1)))
+        self.setFixedWidth(int(CONFIG['WIDTH_PERCENTAGE'] * SCREEN_WIDTH))
         self.setAlignment(Qt.AlignCenter)
 
         self.setTextFormat(Qt.RichText)
@@ -97,7 +97,7 @@ class MainWindow(QWidget):
             # QPixmap('ASSETS/COOP.jpg'),
 
             Text('<p style="line-height:' + str(
-                line_height) + ';">Vous êtes en train d\'acheter un shampooing.<br>'
+                CONFIG['LINE_HEIGHT']) + ';">Vous êtes en train d\'acheter un shampooing.<br>'
                                'Vous réglez vos achats avec votre carte de fidélité.<br>'
                                'Le magasin a donc accès à votre historique d’achats.</p>'),
             Padding(5),
@@ -105,7 +105,7 @@ class MainWindow(QWidget):
             ,
             Title('Que sait le magasin sur vous ?'),
             Text('<p style="line-height:' + str(
-                line_height) + ';">Le magasin sait quel shampooing vous venez d\'acheter.<br>'
+                CONFIG['LINE_HEIGHT']) + ';">Le magasin sait quel shampooing vous venez d\'acheter.<br>'
 
                                "Est-ce que vous pensez que cette information personelle révèle beaucoup à votre sujet ?<br>"
                                "<span style=\"color:rgb(0,175,0)\">Non, pas du tout </span>  <br>"
@@ -114,7 +114,7 @@ class MainWindow(QWidget):
 
             Title('Un simple achat peut en dire beaucoup sur vous !'),
             Text('<p style="line-height:' + str(
-                line_height) + ';">En 2012, un magasin a appris qu’une adolescente était enceinte avant que sa famille ne l\'apprenne.<br>'
+                CONFIG['LINE_HEIGHT']) + ';">En 2012, un magasin a appris qu’une adolescente était enceinte avant que sa famille ne l\'apprenne.<br>'
                                'Elle a juste acheté un shampooing sans parfum et le magasin en a déduit qu\'elle était enceinte.<br>'
                                'En effet, les femmes enceintes préfèrent acheter des produits sans parfum.<br>'
                  # 'L\'adolescente qui achetait des produits très parfumé a subitement commencé à acheter des produits aux parfums neutres.<br>'
@@ -126,7 +126,7 @@ class MainWindow(QWidget):
             # QPixmap("ASSETS/MONEY.png"),
             Title("Pourquoi les entreprises veulent mes données ?"),
             Text('<p style="line-height:' + str(
-                line_height) + ';">Les entreprises gagnent de l\'argent avec vos informations personnelles<br>'
+                CONFIG['LINE_HEIGHT']) + ';">Les entreprises gagnent de l\'argent avec vos informations personnelles<br>'
                                'Le magasin les a utilisées pour personnaliser la publicité envoyée à l\'adolescente : des couches et des berceaux.<br>'
                                'Une carte de fidélité nous fait économiser de l\'argent, mais en échange, nous payons avec nos informations personelles...<br>'
                                '... afin que les entreprises gagnent encore plus d\'argent !</p>'),
@@ -134,7 +134,7 @@ class MainWindow(QWidget):
             QPixmap(resource_path("./ASSETS/MONEY.png")),
             Title("Comment est-ce possible ?"),
             Text('<p style="line-height:' + str(
-                line_height) + ';">Grâce à l\'historique d\'achats de ses 2 millions de clients quotidiens.<br>'
+                CONFIG['LINE_HEIGHT']) + ';">Grâce à l\'historique d\'achats de ses 2 millions de clients quotidiens.<br>'
                                'Un humain ne peut pas analyser toutes ces données à la main. Un ordinateur, oui.<br>'
                                'Avez-vous déjà entendu parler d\'intelligence artificielle, de réseaux de neurones ou de deep learning ? <br>'
                                'C\'est ce qui permet aux entreprises de transformer vos données en argent.</p>'),
@@ -142,7 +142,7 @@ class MainWindow(QWidget):
             QPixmap(resource_path("./ASSETS/COMPUTER.png")),
             Title('Un réseau de neurones ? Essayez !'),
             Text('<p style="line-height:' + str(
-                line_height) + ';">Maintenant, vous allez analyser des photos avec un réseau de neurones. <br>'
+                CONFIG['LINE_HEIGHT']) + ';">Maintenant, vous allez analyser des photos avec un réseau de neurones. <br>'
                  # 'Vous pouvez utiliser une image de votre ordinateur, ou le lien d\'une image sur internet<br>'
                                'N\'hésitez pas à analyser vos photos personelles : nous garantissons que nous ne gardons aucune image.</p>'),
 
@@ -325,9 +325,9 @@ class secondTab(QLabel):
         self.grid_layout.addWidget(self.from_url_button, 2, 1)
         self.grid_layout.addWidget(self.from_drive_button, 2, 0)
 
-        self.from_url_edit.setFixedWidth(int(SCREEN_WIDTH * WIDTH_PERCENTAGE / 3.0))
-        self.from_url_button.setFixedWidth(int(SCREEN_WIDTH * WIDTH_PERCENTAGE / 3.0))
-        self.from_drive_button.setFixedWidth(int(SCREEN_WIDTH * WIDTH_PERCENTAGE / 3.0))
+        self.from_url_edit.setFixedWidth(int(SCREEN_WIDTH * CONFIG['WIDTH_PERCENTAGE'] / 3.0))
+        self.from_url_button.setFixedWidth(int(SCREEN_WIDTH * CONFIG['WIDTH_PERCENTAGE'] / 3.0))
+        self.from_drive_button.setFixedWidth(int(SCREEN_WIDTH * CONFIG['WIDTH_PERCENTAGE'] / 3.0))
 
         self.from_url_edit.setFixedHeight(60)
         self.from_url_edit.setStyleSheet('background:white')
@@ -362,7 +362,7 @@ class secondTab(QLabel):
         self.setLayout(self.main_layout)
         self.file_to_analyse = cv2.imread(resource_path('SAMPLES/01.jpeg'))
         self.file_to_analyse_pixmap = self.convert_cv_qt(self.file_to_analyse)
-        self.file_to_analyse_pixmap = self.file_to_analyse_pixmap.scaledToHeight(IMAGE_HEIGHT)
+        self.file_to_analyse_pixmap = self.file_to_analyse_pixmap.scaledToHeight(CONFIG['IMAGE_HEIGHT'])
         self.image_ph.setPixmap(self.file_to_analyse_pixmap)
 
     def show_hide(self):
@@ -398,7 +398,7 @@ class secondTab(QLabel):
         if check:
             self.file_to_analyse = cv2.imread(file)
             self.file_to_analyse_pixmap = self.convert_cv_qt(self.file_to_analyse)
-            self.file_to_analyse_pixmap = self.file_to_analyse_pixmap.scaledToHeight(IMAGE_HEIGHT)
+            self.file_to_analyse_pixmap = self.file_to_analyse_pixmap.scaledToHeight(CONFIG['IMAGE_HEIGHT'])
             self.image_ph.setPixmap(self.file_to_analyse_pixmap)
 
             self.displaying_results = False
@@ -418,7 +418,7 @@ class secondTab(QLabel):
         self.file_analysed, self.SEEN, self.COLORS = instance_segmentation_api(self.file_to_analyse)
 
         self.file_analysed_pixmap = self.convert_cv_qt(self.file_analysed)
-        self.file_analysed_pixmap = self.file_analysed_pixmap.scaledToHeight(IMAGE_HEIGHT)
+        self.file_analysed_pixmap = self.file_analysed_pixmap.scaledToHeight(CONFIG['IMAGE_HEIGHT'])
         self.show_hide()
 
         self.show_hide_button.setEnabled(True)
@@ -442,7 +442,7 @@ class secondTab(QLabel):
             self.file_to_analyse = img
 
             self.file_to_analyse_pixmap = self.convert_cv_qt(self.file_to_analyse)
-            self.file_to_analyse_pixmap = self.file_to_analyse_pixmap.scaledToHeight(IMAGE_HEIGHT)
+            self.file_to_analyse_pixmap = self.file_to_analyse_pixmap.scaledToHeight(CONFIG['IMAGE_HEIGHT'])
             self.image_ph.setPixmap(self.file_to_analyse_pixmap)
             self.displaying_results = False
             self.labels_ph.setText('')
