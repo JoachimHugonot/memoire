@@ -35,7 +35,8 @@ class Title(QLabel):
         self.setText(text)
         self.setFont(FONT_TITLE)
         self.setFixedHeight(170)
-        self.setStyleSheet('margin-top: 100px; margin-bottom: 10px; color:darkBlue')
+        color_str = 'rgb'+str(tuple(CONFIG['TITLE_COLOR']))
+        self.setStyleSheet('margin-top: 100px; margin-bottom: 10px; color:'+color_str)
         self.setAlignment(Qt.AlignCenter)
         self.setFixedWidth(int(CONFIG['WIDTH_PERCENTAGE'] * SCREEN_WIDTH))
 
@@ -53,7 +54,8 @@ class Text(QLabel):
         self.setFixedHeight(int(50 * n_lines + pt_to_pixel(CONFIG['LINE_HEIGHT']) / 100 * (n_lines - 1)))
         self.setFixedWidth(int(CONFIG['WIDTH_PERCENTAGE'] * SCREEN_WIDTH))
         self.setAlignment(Qt.AlignCenter)
-
+        color_str = 'rgb' + str(tuple(CONFIG['TEXT_COLOR']))
+        self.setStyleSheet('color:'+color_str)
         self.setTextFormat(Qt.RichText)
         self.setTextInteractionFlags(Qt.TextBrowserInteraction)
         self.setOpenExternalLinks(True)
