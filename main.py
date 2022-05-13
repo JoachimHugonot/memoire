@@ -150,7 +150,7 @@ class MainWindow(QWidget):
                                'N\'hésitez pas à analyser vos photos personelles : nous garantissons que nous ne gardons aucune image.</p>'),
 
             secondTab(),
-            Title("7 - Et alors ?"),
+            #Title("7 - Et alors ?"),
             # Text('<p style="line-height:'+str(line_height)+';">TODO <br>'
             #      "Photo analysée + problématique<br>"
             #      "Sur le marché du travail dans quelques années<br>"

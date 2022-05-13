@@ -4,6 +4,6 @@
   "IMAGE_HEIGHT" : 600,
   "WIDTH_PERCENTAGE" : 0.95,
   "LINE_HEIGHT" : 1,
-  "TITLE_COLOR" : [255,0 ,0],
-  "TEXT_COLOR" : [127,0 ,0]
+  "TITLE_COLOR" : [0,0 ,127],
+  "TEXT_COLOR" : [0, 0 ,0]
 }
