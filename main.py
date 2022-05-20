@@ -3,6 +3,7 @@ import sys
 import urllib
 from urllib import request
 import json
+import cv2
 
 # Project imports
 from cnn import *
@@ -52,6 +53,7 @@ class Text(QLabel):
 
         n_lines = text.count('<br>') + text.count('<ol>') + text.count('<ul>') + text.count('<li>') + 1
         self.setFixedHeight(int(50 * n_lines + pt_to_pixel(CONFIG['LINE_HEIGHT']) / 100 * (n_lines - 1)))
+
         self.setFixedWidth(int(CONFIG['WIDTH_PERCENTAGE'] * SCREEN_WIDTH))
         self.setAlignment(Qt.AlignCenter)
         color_str = 'rgb' + str(tuple(CONFIG['TEXT_COLOR']))
@@ -62,6 +64,27 @@ class Text(QLabel):
 
 
 class MainWindow(QWidget):
+    def press(self):
+        self.but1.setFlat(False)
+        self.but2.setFlat(False)
+        self.but3.setFlat(False)
+        self.sender().setFlat(True)
+
+        for idx, el in enumerate(self.ELEMENTS):
+            if not el.isVisible():
+
+                el.show()
+
+                if idx != len(self.ELEMENTS) - 1 and type(self.ELEMENTS[idx + 1]) in [Title]:
+                    break
+        # self.vsb.setValue(self.vsb.maximum() + 200)
+        QTimer.singleShot(100, self.handle_timeout)
+
+        self.but1.setDisabled(True)
+        self.but2.setDisabled(True)
+        self.but3.setDisabled(True)
+
+        self.STEP_COUNTER += 1
     def __init__(self):
         super().__init__()
 
@@ -81,6 +104,45 @@ class MainWindow(QWidget):
 
         layout = QVBoxLayout(self)
         layout.addWidget(self.scroll)
+
+
+        self.STEP_COUNTER = 0
+        self.but1 = QPushButton()
+        self.but2 = QPushButton()
+        self.but3 = QPushButton()
+
+
+
+        self.but1.clicked.connect(self.press)
+        self.but2.clicked.connect(self.press)
+        self.but3.clicked.connect(self.press)
+
+
+
+        self.but1.setText('Non, pas du tout'),
+        self.but2.setText('Un peu, rien d\'important'),
+        self.but3.setText('Oui, beaucoup trop'),
+
+        self.but1.setFont(FONT)
+        self.but2.setFont(FONT)
+        self.but3.setFont(FONT)
+
+        self.but1.setStyleSheet('color:rgb(0,175,0)')
+        self.but2.setStyleSheet('color:rgb(175,127,0)')
+        self.but3.setStyleSheet('color:rgb(175,0,0)')
+
+        self.but1.setFixedWidth(int(CONFIG['WIDTH_PERCENTAGE'] * SCREEN_WIDTH))
+        self.but2.setFixedWidth(int(CONFIG['WIDTH_PERCENTAGE'] * SCREEN_WIDTH))
+        self.but3.setFixedWidth(int(CONFIG['WIDTH_PERCENTAGE'] * SCREEN_WIDTH))
+        self.but1.setFixedWidth(500)
+        self.but2.setFixedWidth(500)
+        self.but3.setFixedWidth(500)
+
+        self.but1.setFixedHeight(30)
+        self.but2.setFixedHeight(30)
+        self.but3.setFixedHeight(30)
+
+
 
         # Creation of the elements
         self.layout = QVBoxLayout()
@@ -110,14 +172,15 @@ class MainWindow(QWidget):
             Text('<p style="line-height:' + str(
                 CONFIG['LINE_HEIGHT']) + ';">Le magasin sait quel shampoing vous venez d\'acheter.<br>'
 
-                               "Est-ce que vous pensez que cette information personelle révèle beaucoup à votre sujet ?<br>"
-                               "<span style=\"color:rgb(0,175,0)\">Non, pas du tout </span>  <br>"
-                               "<span style=\"color:rgb(175,127,0)\">Un peu, rien d'important</span>  <br>"
-                               "<span style=\"color:rgb(175,0,0)\">Oui, beaucoup trop</span>  </p>"),
-
+                               "Est-ce que vous pensez que cette information personelle révèle beaucoup à votre sujet ?</p>"),
+            self.but1,
+            self.but2,
+            self.but3,
+            Padding(10),
             Title('3 - Un simple achat peut en dire beaucoup sur vous !'),
             Text('<p style="line-height:' + str(
-                CONFIG['LINE_HEIGHT']) + ';">En 2012, un magasin a appris qu’une adolescente était enceinte avant que sa famille ne l\'apprenne.<br>'
+                CONFIG['LINE_HEIGHT']) + ';">La bonne réponse est <span style=\"color:rgb(175,0,0)\">Oui, beaucoup trop</span>  </p><br>'
+                                         'En 2012, un magasin a appris qu’une adolescente était enceinte avant que sa famille ne l\'apprenne.<br>'
                                'Elle a juste acheté un shampoing sans parfum et le magasin en a déduit qu\'elle était enceinte.<br>'
                                'En effet, les femmes enceintes préfèrent acheter des produits sans parfum.<br>'
                  # 'L\'adolescente qui achetait des produits très parfumé a subitement commencé à acheter des produits aux parfums neutres.<br>'
@@ -148,6 +211,8 @@ class MainWindow(QWidget):
                 CONFIG['LINE_HEIGHT']) + ';">Maintenant, vous allez analyser des photos avec un réseau de neurones. <br>'
                  # 'Vous pouvez utiliser une image de votre ordinateur, ou le lien d\'une image sur internet<br>'
                                'N\'hésitez pas à analyser vos photos personelles : nous garantissons que nous ne gardons aucune image.</p>'),
+
+
 
             secondTab(),
             #Title("7 - Et alors ?"),
@@ -204,6 +269,14 @@ class MainWindow(QWidget):
             elif type(widget) == secondTab:
                 widget.setFixedWidth(1200)
                 widget.setFixedHeight(900)
+                self.ELEMENTS.append(widget)
+                formLayout.addWidget(widget, alignment=Qt.AlignCenter)
+            elif type(widget) == QPushButton:
+
+
+
+
+
                 self.ELEMENTS.append(widget)
                 formLayout.addWidget(widget, alignment=Qt.AlignCenter)
             elif type(widget) == Padding:
@@ -264,16 +337,18 @@ class MainWindow(QWidget):
     def keyPressEvent(self, event):
         modifiers = QApplication.keyboardModifiers()
         if Qt.Key_N == event.key():
+            if self.STEP_COUNTER != 2:
 
-            for idx, el in enumerate(self.ELEMENTS):
-                if not el.isVisible():
+                for idx, el in enumerate(self.ELEMENTS):
+                    if not el.isVisible():
 
-                    el.show()
+                        el.show()
 
-                    if idx != len(self.ELEMENTS) - 1 and type(self.ELEMENTS[idx + 1]) in [Title]:
-                        break
-            # self.vsb.setValue(self.vsb.maximum() + 200)
-            QTimer.singleShot(100, self.handle_timeout)
+                        if idx != len(self.ELEMENTS) - 1 and type(self.ELEMENTS[idx + 1]) in [Title]:
+                            break
+                # self.vsb.setValue(self.vsb.maximum() + 200)
+                QTimer.singleShot(100, self.handle_timeout)
+                self.STEP_COUNTER +=1
         if Qt.Key_W == event.key() and modifiers == Qt.ControlModifier:
             sys.exit()
 
@@ -283,6 +358,27 @@ class MainWindow(QWidget):
 
 
 class secondTab(QLabel):
+    def webcam_feed(self):
+        vid = cv2.VideoCapture(0)
+
+
+
+        # Capture the video frame
+        # by frame
+        ret, frame = vid.read()
+        self.file_to_analyse = frame
+        self.file_to_analyse_pixmap = self.convert_cv_qt(self.file_to_analyse)
+        self.file_to_analyse_pixmap = self.file_to_analyse_pixmap.scaledToHeight(CONFIG['IMAGE_HEIGHT'])
+        self.image_ph.setPixmap(self.file_to_analyse_pixmap)
+        self.displaying_results = False
+        self.labels_ph.setText('')
+        self.show_hide_button.setEnabled(False)
+
+        # After the loop release the cap object
+        vid.release()
+        # Destroy all the windows
+        cv2.destroyAllWindows()
+
     def __init__(self, parent=None):
         QWidget.__init__(self, parent)
 
@@ -317,6 +413,11 @@ class secondTab(QLabel):
         self.show_hide_button.clicked.connect(self.show_hide)
         self.show_hide_button.setEnabled(False)
 
+        self.webcam_button = QPushButton('Webcam')
+        self.webcam_button.setFont(FONT)
+        self.webcam_button.setFocusPolicy(Qt.NoFocus)
+        self.webcam_button.clicked.connect(self.webcam_feed)
+
         self.from_url_edit = QTextEdit()
 
         self.from_drive_button = QPushButton("Choisir un fichier sur l'ordinateur")
@@ -329,14 +430,17 @@ class secondTab(QLabel):
         self.grid_layout.addWidget(self.from_url_edit, 1, 1)
         self.grid_layout.addWidget(self.from_url_button, 2, 1)
         self.grid_layout.addWidget(self.from_drive_button, 2, 0)
+        self.grid_layout.addWidget(self.webcam_button, 2, 2)
 
         self.from_url_edit.setFixedWidth(int(SCREEN_WIDTH * CONFIG['WIDTH_PERCENTAGE'] / 3.0))
         self.from_url_button.setFixedWidth(int(SCREEN_WIDTH * CONFIG['WIDTH_PERCENTAGE'] / 3.0))
         self.from_drive_button.setFixedWidth(int(SCREEN_WIDTH * CONFIG['WIDTH_PERCENTAGE'] / 3.0))
+        self.webcam_button.setFixedWidth(int(SCREEN_WIDTH * CONFIG['WIDTH_PERCENTAGE'] / 3.0))
 
         self.from_url_edit.setFixedHeight(60)
         self.from_url_edit.setStyleSheet('background:white')
         self.from_url_button.setFixedHeight(40)
+        self.webcam_button.setFixedHeight(40)
 
         self.from_drive_button.setFixedHeight(40)
 
@@ -362,6 +466,7 @@ class secondTab(QLabel):
         self.main_layout.addWidget(self.labels_ph, 1)  # padding
         self.main_layout.addWidget(self.from_analyse_button, 1)  # padding
         self.main_layout.addWidget(self.show_hide_button, 1)  # padding
+        #self.main_layout.addWidget(self.webcam_button, 1)  # padding
         # self.main_layout.addWidget(QLabel(''), 1)  # padding
         self.displaying_results = False
         self.setLayout(self.main_layout)
