@@ -128,32 +128,16 @@ class MasterWidget(QWidget):
                  self.CONFIG),
 
             AIPanel(self.CONFIG),
-            # Title("7 - Et alors ?"),
-            # Text('<p style="line-height:'+str(line_height)+';">TODO <br>'
-            #      "Photo analysée + problématique<br>"
-            #      "Sur le marché du travail dans quelques années<br>"
-            #      "Navigation privée + nom/prénom<br>"
-            #      "Les services que vous utilisez peuvent utiliser, vos informations. Optionellement lien prochaine partie </p>"
-            #      ),
-            # Title("Vos informations"),
-            # Text('<p style="line-height:'+str(line_height)+';">Avez-vous déjà effectué une recherche sur un moteur de recherche et vu une publicité en rapport immédiatement après ?<br>'
-            #      'Savez-vous comment Google (et Facebook) gagnent t-ils de l’argent ? <br>'
-            #   'Avec la publicité<br>'
-            #  'notre profil est transmis à des entreprises qui payent Google pour nous afficher de la publicité.<br>'
-            #      'Google et Facebook ne sont pas des entreprises qui développent des logiciels, mais bien des entreprises de publicité<br>'
-            #      'En 2021, le chiffre d\'affaires de Google a été de 257 milliards, 80% de ces revenus proviennent de la publicité</p>')
-            #
-            #
+            Title("7 - Et alors ?", self.CONFIG),
+            Text('<p style="line-height:' + str(
+                CONFIG[
+                    'LINE_HEIGHT']) + ';">Tout le monde peut analyser vos photos ! <br>'
+                  "Une fois que vos photos sont sur internet, c'est permanent. <br>"
+                  '<span style=\"color:rgb(200,0,0)\">Soyez avares de vos données ☺</span>  </p>'
 
-            # Text('Nos ordinateurs sont désormais capables d’analyser automatiquement les photos et les vidéos grâce à l’intelligence artificielle'),
-            # Text('Qui a accès à vos photos/vidéos et à le droit de les utiliser afin d’en tirer des informations vous concernant ? Probablement tous les services que vous utilisez sur vos smartphones'),
-            # Text('Un simple achat d’un produit de beauté peut permettre à un inconnu de savoir si vous êtes enceinte.'),
-
-            # Text("Maintenant imaginez ce que les géants du domaine (Google et Facebook) savent sur vous. "),
-            # Text("La gratuité de votre expérience sur vos smartphones à un coût"),
-
-            # QLabel("Ces algorithmes peuvent analyser une très grande quantité de données afin d’en tirer des informations précieuses"),
-            # QLabel("Ces algorithmes peuvent analyser une très grande quantité de données afin d’en tirer des informations précieuses"),
+                  , self.CONFIG),
+            QPixmap("./ASSETS/CONCLUSION.png"),
+            Padding(50, self.CONFIG)
 
         ]
         for widget in WIDGETS_ONE:
@@ -167,7 +151,7 @@ class MasterWidget(QWidget):
 
             if type(widget) == QPixmap:
                 image_ph = QLabel()
-                widget = widget.scaledToHeight(200)
+                widget = widget.scaledToHeight(400)
                 image_ph.setPixmap(widget)
                 self.ELEMENTS.append(image_ph)
                 form_layout.addWidget(image_ph, alignment=Qt.AlignCenter)

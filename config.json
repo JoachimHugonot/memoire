@@ -3,8 +3,8 @@
   "TITLE_SIZE": 50,
   "IMAGE_HEIGHT" : 600,
   "WIDTH_PERCENTAGE" : 0.95,
-  "LINE_HEIGHT" : 150,
+  "LINE_HEIGHT" : 1,
   "TITLE_COLOR" : [0,0 ,127],
   "TEXT_COLOR" : [0, 0 ,0],
-  "DEBUG" : true
+  "DEBUG" : false
 }
